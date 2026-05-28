@@ -2117,9 +2117,13 @@ section {
     margin-top: 12px;
   }
   .s-reel--split .s-reel__body { font-size: 16px; line-height: 1.5; }
-  /* Full-bleed horizontal section: keep it tall enough to feel
-     cinematic but stop forcing min 100vh on a phone. */
-  .s-reel:not(.s-reel--split) { min-height: 0; padding-block: 56px 64px; }
+  /* Full-bleed horizontal section: on a phone the 16:9 frame is
+     already constrained by viewport width, so surrounding whitespace
+     reads as the video being "small". Pull the section in tight and
+     drop the bleed margins so the video becomes the dominant element. */
+  .s-reel:not(.s-reel--split) { min-height: 0; padding-block: 24px 32px; }
+  .s-reel:not(.s-reel--split) .s-reel__index { margin-bottom: 12px; }
+  .s-reel:not(.s-reel--split) .s-reel__bleed { margin-block: 0; }
 }
 
 /* ---------- AutoVideo component (looping, custom play/pause) ---------- */
