@@ -2718,3 +2718,24 @@ section {
   }
 }
 
+/* ---------- Mobile: no scroll or motion effects ----------
+   Paired with the noMotion JS guard in pages/index.astro — that gate
+   stops any GSAP/ScrollTrigger work from running below 768px, and this
+   block kills CSS-driven motion (the scroll-hint keyframe) and resets
+   the elements GSAP would have set to opacity:0 so they show as-is. */
+@media (max-width: 768px) {
+  .s-hero__line::after {
+    animation: none;
+  }
+  .s-hero__wm,
+  .s-hero__tag,
+  .s-hero__scroll,
+  .s-mission__line,
+  .s-mission__line .word > span,
+  .s-reel__col--video,
+  .s-testimonials__row > * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+

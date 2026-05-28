@@ -94,6 +94,12 @@ import TestimonialCard from "../components/TestimonialCard.astro";
   const reduced = window.matchMedia(
     "(prefers-reduced-motion: reduce)"
   ).matches;
+  /* Mobile (≤768px) opts out of every scroll-driven animation. The page
+     is left to scroll natively with no JS effects, no ScrollTriggers,
+     no per-frame work. Entrance fades that aren't scroll-driven are
+     also skipped so nothing animates on a phone. */
+  const mobile = window.matchMedia("(max-width: 768px)").matches;
+  const noMotion = reduced || mobile;
 
   gsap.registerPlugin(ScrollTrigger);
 
@@ -105,7 +111,7 @@ import TestimonialCard from "../components/TestimonialCard.astro";
   const heroTag = document.querySelector(".s-hero__tag");
   const heroScroll = document.querySelector(".s-hero__scroll");
 
-  if (hero && heroWm && heroTag && heroScroll && !reduced) {
+  if (hero && heroWm && heroTag && heroScroll && !noMotion) {
     gsap.set([heroWm, heroTag, heroScroll], { opacity: 0, y: 24 });
     gsap.to(heroWm, {
       opacity: 1,
@@ -192,11 +198,13 @@ import TestimonialCard from "../components/TestimonialCard.astro";
      scroll. Mobile gets one cheap fade-up of the whole line instead. */
   const wordSplit = window.matchMedia("(min-width: 1024px)").matches;
   splitTargets.forEach((el) => {
+    /* On mobile we skip both the word-split DOM mutation and the
+       animation — the text just renders as-is, no JS runs on scroll. */
+    if (noMotion) return;
     const words = (el.textContent ?? "").trim().split(/\s+/);
     el.innerHTML = words
       .map((w) => `<span class="word"><span>${w}</span></span>`)
       .join(" ");
-    if (reduced) return;
     if (wordSplit) {
       const inner = el.querySelectorAll(".word > span");
       gsap.set(inner, { yPercent: 110, opacity: 0 });
@@ -221,7 +229,7 @@ import TestimonialCard from "../components/TestimonialCard.astro";
 
   /* ---- Reel: scale-in ------------------------------------------- */
   const reelFrame = document.querySelector(".s-reel__col--video");
-  if (reelFrame && !reduced) {
+  if (reelFrame && !noMotion) {
     gsap.from(reelFrame, {
       scale: 0.94,
       opacity: 0,
@@ -238,7 +246,7 @@ import TestimonialCard from "../components/TestimonialCard.astro";
   /* Smaller screens get a faster stagger — less waiting on a phone. */
   const stagger = window.innerWidth < 768 ? 0.04 : 0.08;
   revealTargets.forEach((el, i) => {
-    if (reduced) return;
+    if (noMotion) return;
     gsap.from(el, {
       opacity: 0,
       y: 28,
