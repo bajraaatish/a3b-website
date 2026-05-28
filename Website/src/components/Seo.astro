@@ -1,0 +1,115 @@
+---
+import { site } from "../data/site";
+
+/**
+ * Everything that belongs in <head>: meta, Open Graph, Twitter,
+ * canonical, favicons, font preload, and JSON-LD structured data.
+ */
+interface Props {
+  title: string;
+  description?: string;
+  /** path-only OG image, e.g. "/og.png" */
+  ogImage?: string;
+  type?: "website" | "article";
+  noindex?: boolean;
+  /** extra page-specific JSON-LD objects (Article, Service, Breadcrumb…) */
+  jsonLd?: Record<string, unknown>[];
+}
+const {
+  title,
+  description = site.description,
+  ogImage = "/og.png",
+  type = "website",
+  noindex = false,
+  jsonLd = [],
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, site.url).href;
+const ogImageUrl = new URL(ogImage, site.url).href;
+const fullTitle =
+  title === site.name ? `${site.name} — ${site.tagline}` : `${title} — ${site.name}`;
+
+// Base business entity — present on every page.
+const business = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "@id": `${site.url}/#a3b`,
+  name: site.name,
+  legalName: site.legalName,
+  description: site.description,
+  slogan: site.motto,
+  url: site.url,
+  email: site.email,
+  image: ogImageUrl,
+  logo: new URL("/logos/a3b-mark.png", site.url).href,
+  founder: { "@type": "Person", name: "Aatish" },
+  areaServed: { "@type": "Country", name: "Australia" },
+  sameAs: [site.instagram.url],
+  knowsAbout: [
+    "video editing",
+    "documentary brand films",
+    "minimal video",
+    "colour grading",
+  ],
+};
+
+const schemas = [business, ...jsonLd];
+---
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+<meta name="theme-color" content="#F4F1EB" />
+<meta name="color-scheme" content="light" />
+<meta name="generator" content={Astro.generator} />
+
+<!-- Open Graph -->
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={site.name} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImageUrl} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:locale" content={site.locale} />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageUrl} />
+
+<!-- Favicons -->
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+
+<!-- Font preload — the two weights above the fold -->
+<link
+  rel="preload"
+  href="/fonts/Geist-Regular.woff2"
+  as="font"
+  type="font/woff2"
+  crossorigin
+/>
+<link
+  rel="preload"
+  href="/fonts/Geist-Medium.woff2"
+  as="font"
+  type="font/woff2"
+  crossorigin
+/>
+
+<!-- Structured data -->
+{
+  schemas.map((schema) => (
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(schema)}
+    />
+  ))
+}

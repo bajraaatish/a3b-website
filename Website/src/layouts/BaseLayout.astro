@@ -1,0 +1,273 @@
+---
+import "../styles/global.css";
+import Seo from "../components/Seo.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+import { site } from "../data/site";
+
+interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+  type?: "website" | "article";
+  noindex?: boolean;
+  jsonLd?: Record<string, unknown>[];
+}
+const { title, description, ogImage, type, noindex, jsonLd } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <Seo
+      title={title}
+      description={description}
+      ogImage={ogImage}
+      type={type}
+      noindex={noindex}
+      jsonLd={jsonLd}
+    />
+
+    {
+      /* Privacy-first analytics — only emitted once a domain is configured
+         in src/data/site.ts. No cookies, no banner needed. */
+      site.analyticsDomain && (
+        <script
+          defer
+          data-domain={site.analyticsDomain}
+          src="https://plausible.io/js/script.js"
+        />
+      )
+    }
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Skip to content</a>
+    <Nav />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      /* ============================================================
+         a3b — site behaviour. Calm by default: one easing, single
+         fades, no bounce. Runs on every page load (MPA).
+         ============================================================ */
+      import Lenis from "lenis";
+      import gsap from "gsap";
+      import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+      (function () {
+        "use strict";
+
+        const reduced = window.matchMedia(
+          "(prefers-reduced-motion: reduce)"
+        ).matches;
+
+        /* ---- Lenis smooth scroll synced with GSAP ScrollTrigger ----
+           Lenis only smooths the *wheel*, which only exists on pointer
+           devices. On touch screens it adds a per-frame rAF loop and a
+           redundant ScrollTrigger.update on every scroll tick — pure
+           jank for zero benefit — so we skip it entirely there and let
+           native momentum + ScrollTrigger's own listener do the work.
+           Reduced-motion users also get plain native scroll. */
+        let lenis: Lenis | null = null;
+        gsap.registerPlugin(ScrollTrigger);
+
+        const useSmoothScroll =
+          !reduced && window.matchMedia("(pointer: fine)").matches;
+
+        if (useSmoothScroll) {
+          lenis = new Lenis({
+            duration: 1.2,
+            easing: (t: number) =>
+              Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            smoothWheel: true,
+            syncTouch: false,
+          });
+          lenis.on("scroll", ScrollTrigger.update);
+          gsap.ticker.add((time) => lenis!.raf(time * 1000));
+          gsap.ticker.lagSmoothing(0);
+        }
+
+        /* ---- Nav: scrolled state + slide-down past hero + mobile drawer ----
+           On the home page the wordmark IS the hero, so the bar is hidden
+           until the user has scrolled most of the first viewport. Interior
+           pages reveal the bar immediately. */
+        const nav = document.querySelector(".nav");
+        const burger = document.querySelector(".nav__burger");
+        const isHome = location.pathname === "/";
+
+        if (nav) {
+          if (isHome) nav.classList.add("nav--home");
+          const revealAt = isHome
+            ? Math.max(window.innerHeight * 0.6, 120)
+            : 8;
+          const onScroll = () => {
+            const y = window.scrollY;
+            nav.classList.toggle("is-scrolled", y > 8);
+            nav.classList.toggle("is-shown", y > revealAt);
+          };
+          onScroll();
+          window.addEventListener("scroll", onScroll, { passive: true });
+        }
+
+        if (burger && nav) {
+          burger.addEventListener("click", () => {
+            const open = nav.classList.toggle("is-open");
+            burger.setAttribute("aria-expanded", open ? "true" : "false");
+            document.body.style.overflow = open ? "hidden" : "";
+          });
+          const drawer = nav.querySelector(".nav__drawer");
+          drawer?.addEventListener("click", (e) => {
+            if ((e.target as HTMLElement).closest("a")) {
+              nav.classList.remove("is-open");
+              burger.setAttribute("aria-expanded", "false");
+              document.body.style.overflow = "";
+            }
+          });
+          /* close the drawer on Escape */
+          document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && nav.classList.contains("is-open")) {
+              nav.classList.remove("is-open");
+              burger.setAttribute("aria-expanded", "false");
+              document.body.style.overflow = "";
+            }
+          });
+          /* close the drawer and restore scroll on resize to desktop */
+          const mql = window.matchMedia("(max-width: 760px)");
+          mql.addEventListener("change", (e) => {
+            if (!e.matches && nav.classList.contains("is-open")) {
+              nav.classList.remove("is-open");
+              burger.setAttribute("aria-expanded", "false");
+              document.body.style.overflow = "";
+            }
+          });
+        }
+
+        /* ---- Reveal on scroll (single fade, respects reduced motion) ---- */
+        const reveals = document.querySelectorAll<HTMLElement>(".reveal");
+
+        if (reduced || !("IntersectionObserver" in window)) {
+          reveals.forEach((el) => el.classList.add("is-visible"));
+        } else {
+          const io = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (
+                  entry.isIntersecting ||
+                  entry.boundingClientRect.top < 0
+                ) {
+                  entry.target.classList.add("is-visible");
+                  io.unobserve(entry.target);
+                }
+              });
+            },
+            { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
+          );
+          reveals.forEach((el) => io.observe(el));
+        }
+
+        /* ---- FAQ disclosure ---- */
+        const faqs = document.querySelectorAll<HTMLElement>(".faq__item");
+        faqs.forEach((item) => {
+          const q = item.querySelector<HTMLButtonElement>(".faq__q");
+          const a = item.querySelector<HTMLElement>(".faq__a");
+          if (!q || !a) return;
+          q.addEventListener("click", () => {
+            const open = item.classList.contains("is-open");
+            faqs.forEach((other) => {
+              other.classList.remove("is-open");
+              const oa = other.querySelector<HTMLElement>(".faq__a");
+              if (oa) oa.style.maxHeight = "";
+              other
+                .querySelector(".faq__q")
+                ?.setAttribute("aria-expanded", "false");
+            });
+            if (!open) {
+              item.classList.add("is-open");
+              a.style.maxHeight = a.scrollHeight + "px";
+              q.setAttribute("aria-expanded", "true");
+            }
+          });
+        });
+
+        /* ---- Contact form: validate, submit over AJAX, honest fallback ----
+           Works as a Netlify Form once deployed; degrades gracefully to a
+           "email directly" message on any host that has no form backend. */
+        const form = document.querySelector<HTMLFormElement>("[data-form]");
+        if (form) {
+          const status = form.querySelector<HTMLElement>("[data-form-status]");
+          const btn =
+            form.querySelector<HTMLButtonElement>("button[type=submit]");
+          const btnLabel = btn?.textContent ?? "Send";
+          const setStatus = (msg: string, ok: boolean) => {
+            if (!status) return;
+            status.hidden = false;
+            status.textContent = msg;
+            status.classList.toggle("is-error", !ok);
+          };
+
+          form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            if (!form.checkValidity()) {
+              setStatus(
+                "Please add your name and a valid email so a reply can reach you.",
+                false
+              );
+              form.reportValidity();
+              return;
+            }
+
+            const isWired = form.hasAttribute("data-netlify");
+            if (!isWired) {
+              setStatus(
+                "This form is not connected to a backend on this host. " +
+                  "For now, email hello@a3b.video directly — a reply follows " +
+                  "within two working days.",
+                true
+              );
+              return;
+            }
+
+            try {
+              if (btn) {
+                btn.disabled = true;
+                btn.textContent = "Sending…";
+              }
+              const body = new URLSearchParams(
+                new FormData(form) as any
+              ).toString();
+              const res = await fetch(form.getAttribute("action") || "/", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body,
+              });
+              if (!res.ok) throw new Error(String(res.status));
+              if (btn) btn.textContent = "Sent";
+              setStatus(
+                "Thank you — your brief request is in. A reply follows within " +
+                  "two working days.",
+                true
+              );
+              form.reset();
+            } catch {
+              if (btn) {
+                btn.disabled = false;
+                btn.textContent = btnLabel;
+              }
+              setStatus(
+                "The form backend is not live on this host yet. For now, " +
+                  "email hello@a3b.video directly and a reply follows within " +
+                  "two working days.",
+                false
+              );
+            }
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>

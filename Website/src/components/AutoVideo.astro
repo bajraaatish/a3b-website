@@ -1,0 +1,73 @@
+---
+/**
+ * AutoVideo
+ * --------------------------------------------------------------
+ * Autoplay + loop + muted video with a single custom pause/play
+ * pill. No native controls. Apple-style frosted button positioned
+ * via `controlSide` (right by default, left for the vertical demo).
+ */
+interface Props {
+  src: string;
+  poster?: string;
+  /** "wide" = 16:9, "vertical" = 9:16 */
+  ratio?: "wide" | "vertical";
+  /** Which side the play/pause button sits on */
+  controlSide?: "right" | "left";
+  /** Extra class on the outer container */
+  class?: string;
+}
+const {
+  src,
+  poster,
+  ratio = "wide",
+  controlSide = "right",
+  class: cls,
+} = Astro.props;
+---
+<div class:list={["autovid", `autovid--${ratio}`, `autovid--ctrl-${controlSide}`, cls]} data-autovid>
+  <video
+    class="autovid__video"
+    src={src}
+    poster={poster}
+    autoplay
+    loop
+    muted
+    playsinline
+    preload="metadata"
+  ></video>
+  <button
+    type="button"
+    class="autovid__btn"
+    data-autovid-btn
+    aria-label="Pause video"
+    aria-pressed="true"
+  >
+    <span class="autovid__icon autovid__icon--pause" aria-hidden="true">
+      <span></span><span></span>
+    </span>
+    <span class="autovid__icon autovid__icon--play" aria-hidden="true"></span>
+  </button>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-autovid]").forEach((root) => {
+    const video = root.querySelector<HTMLVideoElement>(".autovid__video");
+    const btn = root.querySelector<HTMLButtonElement>("[data-autovid-btn]");
+    if (!video || !btn) return;
+
+    const sync = () => {
+      const paused = video.paused;
+      root.classList.toggle("is-paused", paused);
+      btn.setAttribute("aria-pressed", paused ? "false" : "true");
+      btn.setAttribute("aria-label", paused ? "Play video" : "Pause video");
+    };
+
+    btn.addEventListener("click", () => {
+      if (video.paused) video.play();
+      else video.pause();
+    });
+    video.addEventListener("play", sync);
+    video.addEventListener("pause", sync);
+    sync();
+  });
+</script>

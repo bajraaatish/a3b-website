@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>a3b — Logo System</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/geist@5.1.1/400.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/geist@5.1.1/500.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/geist-mono@5.1.1/400.css">
+  <style>
+    :root {
+      --bone: #F4F1EB;
+      --ink: #1A1F1C;
+      --sage: #7A8B6F;
+      --mist: #C9CFC4;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Geist', system-ui, sans-serif;
+      background: var(--bone);
+      color: var(--ink);
+      min-height: 100vh;
+      padding: 4rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .mono {
+      font-family: 'Geist Mono', ui-monospace, monospace;
+      font-weight: 400;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 5rem;
+    }
+
+    .header-wordmark {
+      font-size: 120px;
+      font-weight: 500;
+      letter-spacing: -0.05em;
+      line-height: 1;
+      color: var(--ink);
+    }
+
+    .header-wordmark .three { color: var(--sage); }
+
+    .header-tagline {
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--ink);
+      margin-top: 1.5rem;
+      letter-spacing: -0.01em;
+    }
+
+    .header-meta {
+      font-size: 11px;
+      color: var(--mist);
+      margin-top: 2rem;
+      letter-spacing: 0.04em;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 4rem;
+    }
+
+    .section-label {
+      font-size: 11px;
+      color: var(--sage);
+      letter-spacing: 0.04em;
+      margin-bottom: 1.5rem;
+      text-transform: lowercase;
+    }
+
+    .section-title {
+      font-size: 32px;
+      font-weight: 500;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+
+    .section-body {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.55;
+      max-width: 65ch;
+      color: var(--ink);
+      opacity: 0.75;
+    }
+
+    /* Logo Cards */
+    .logo-grid {
+      display: grid;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .logo-grid-2 { grid-template-columns: 1.5fr 1fr; }
+    .logo-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .logo-grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+    .logo-card {
+      border-radius: 16px;
+      padding: 3rem 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 200px;
+      position: relative;
+    }
+
+    .logo-card-bone { background: var(--bone); border: 1px solid var(--mist); }
+    .logo-card-ink { background: var(--ink); }
+    .logo-card-sage { background: var(--sage); }
+
+    .logo-card-display {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-card-meta {
+      margin-top: 1.5rem;
+    }
+
+    .logo-card-meta-label {
+      font-size: 11px;
+      letter-spacing: 0.03em;
+      margin-bottom: 4px;
+    }
+
+    .logo-card-meta-desc {
+      font-size: 12px;
+      font-weight: 400;
+      opacity: 0.6;
+    }
+
+    /* Wordmarks */
+    .wordmark {
+      font-weight: 500;
+      letter-spacing: -0.05em;
+      line-height: 1;
+    }
+
+    .wordmark-xl { font-size: 96px; }
+    .wordmark-lg { font-size: 56px; }
+    .wordmark-md { font-size: 36px; }
+    .wordmark-sm { font-size: 24px; }
+
+    .wordmark .three { color: var(--sage); }
+
+    .wordmark-ink { color: var(--ink); }
+    .wordmark-bone { color: var(--bone); }
+
+    /* Mark */
+    .mark {
+      width: 80px;
+      height: 80px;
+      border-radius: 22%;
+      background: var(--sage);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mark-sm { width: 48px; height: 48px; }
+    .mark-xs { width: 32px; height: 32px; }
+
+    .mark-numeral {
+      font-weight: 500;
+      color: var(--bone);
+      font-size: 48px;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .mark-sm .mark-numeral { font-size: 28px; }
+    .mark-xs .mark-numeral { font-size: 18px; }
+
+    /* Clear Space */
+    .clearspace-demo {
+      position: relative;
+      display: inline-block;
+      padding: 2rem;
+    }
+
+    .clearspace-border {
+      position: absolute;
+      border: 1px dashed var(--sage);
+      top: 0; left: 0; right: 0; bottom: 0;
+      border-radius: 8px;
+      pointer-events: none;
+    }
+
+    /* Color swatches */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .color-swatch {
+      border-radius: 12px;
+      padding: 1.5rem;
+      min-height: 140px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .color-swatch-name {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .color-swatch-hex {
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      opacity: 0.7;
+    }
+
+    /* Forbidden */
+    .forbidden-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+      margin-top: 2rem;
+    }
+
+    .forbidden-card {
+      background: var(--bone);
+      border: 1px solid var(--mist);
+      border-radius: 12px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+    }
+
+    .forbidden-demo {
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .forbidden-label {
+      font-size: 11px;
+      color: #A03333;
+      margin-top: 1rem;
+      letter-spacing: 0.03em;
+    }
+
+    /* Sizing */
+    .size-demo {
+      display: flex;
+      align-items: flex-end;
+      gap: 2rem;
+      margin-top: 2rem;
+      padding: 2rem;
+      background: var(--bone);
+      border: 1px solid var(--mist);
+      border-radius: 16px;
+    }
+
+    .size-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .size-label {
+      font-size: 10px;
+      color: var(--sage);
+      letter-spacing: 0.04em;
+    }
+
+    /* Divider */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--mist);
+      margin: 4rem 0;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 3rem 0;
+    }
+
+    .footer-text {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--mist);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      body { padding: 2rem 1rem; }
+      .header-wordmark { font-size: 72px; }
+      .logo-grid-2, .logo-grid-3, .logo-grid-4 { grid-template-columns: 1fr; }
+      .color-grid { grid-template-columns: 1fr 1fr; }
+      .forbidden-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-wordmark">a<span class="three">3</span>b</div>
+    <p class="header-tagline">quiet work, loud results.</p>
+    <p class="header-meta mono">logo system · v2.0 · 2026</p>
+  </header>
+
+  <hr class="divider">
+
+  <!-- 01 — The System -->
+  <section class="section">
+    <p class="section-label mono">01 — the system</p>
+    <h2 class="section-title">Two pieces, same atom</h2>
+    <p class="section-body">The a3b identity uses two marks: a primary wordmark for most contexts and a secondary mark (the chip) for compact spaces. The Sage-colored 3 is the visual anchor in both.</p>
+
+    <div class="logo-grid logo-grid-2">
+      <div class="logo-card logo-card-bone">
+        <div class="logo-card-display">
+          <span class="wordmark wordmark-xl wordmark-ink">a<span class="three">3</span>b</span>
+        </div>
+        <div class="logo-card-meta">
+          <p class="logo-card-meta-label mono" style="color: var(--sage);">primary — wordmark</p>
+          <p class="logo-card-meta-desc">website, deck, email signature, presentations</p>
+        </div>
+      </div>
+
+      <div class="logo-card logo-card-bone">
+        <div class="logo-card-display">
+          <div class="mark">
+            <span class="mark-numeral">3</span>
+          </div>
+        </div>
+        <div class="logo-card-meta">
+          <p class="logo-card-meta-label mono" style="color: var(--sage);">secondary — mark</p>
+          <p class="logo-card-meta-desc">app icon, favicon, avatar, watermark</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 02 — Color Variations -->
+  <section class="section">
+    <p class="section-label mono">02 — color variations</p>
+    <h2 class="section-title">Four approved treatments</h2>
+    <p class="section-body">No other variations exist or may be created. The default and dark mode versions include the Sage accent. The monochrome versions omit it for single-color applications.</p>
+
+    <div class="logo-grid logo-grid-4" style="margin-top: 2rem;">
+      <!-- Default -->
+      <div class="logo-card logo-card-bone" style="padding: 2rem 1rem;">
+        <div class="logo-card-display">
+          <span class="wordmark wordmark-md wordmark-ink">a<span class="three">3</span>b</span>
+        </div>
+        <div class="logo-card-meta" style="text-align: center;">
+          <p class="logo-card-meta-label mono" style="color: var(--sage);">default</p>
+          <p class="logo-card-meta-desc">ink + sage on bone</p>
+        </div>
+      </div>
+
+      <!-- Dark Mode -->
+      <div class="logo-card logo-card-ink" style="padding: 2rem 1rem;">
+        <div class="logo-card-display">
+          <span class="wordmark wordmark-md wordmark-bone">a<span class="three">3</span>b</span>
+        </div>
+        <div class="logo-card-meta" style="text-align: center;">
+          <p class="logo-card-meta-label mono" style="color: var(--sage);">dark mode</p>
+          <p class="logo-card-meta-desc" style="color: var(--bone); opacity: 0.5;">bone + sage on ink</p>
+        </div>
+      </div>
+
+      <!-- Monochrome Ink -->
+      <div class="logo-card logo-card-bone" style="padding: 2rem 1rem;">
+        <div class="logo-card-display">
+          <span class="wordmark wordmark-md wordmark-ink">a3b</span>
+        </div>
+        <div class="logo-card-meta" style="text-align: center;">
+          <p class="logo-card-meta-label mono" style="color: var(--sage);">monochrome ink</p>
+          <p class="logo-card-meta-desc">single-color print</p>
+        </div>
+      </div>
+
+      <!-- Monochrome Bone -->
+      <div class="logo-card logo-card-ink" style="padding: 2rem 1rem;">
+        <div class="logo-card-display">
+          <span class="wordmark wordmark-md wordmark-bone">a3b</span>
+        </div>
+        <div class="logo-card-meta" style="text-align: center;">
+          <p class="logo-card-meta-label mono" style="color: var(--sage);">monochrome bone</p>
+          <p class="logo-card-meta-desc" style="color: var(--bone); opacity: 0.5;">reverse single-color</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 03 — The Palette -->
+  <section class="section">
+    <p class="section-label mono">03 — the palette</p>
+    <h2 class="section-title">Four colors, strict roles</h2>
+
+    <div class="color-grid">
+      <div class="color-swatch" style="background: var(--bone); border: 1px solid var(--mist);">
+        <p class="color-swatch-name" style="color: var(--ink);">Bone</p>
+        <p class="color-swatch-hex mono" style="color: var(--ink);">#F4F1EB</p>
+      </div>
+      <div class="color-swatch" style="background: var(--ink);">
+        <p class="color-swatch-name" style="color: var(--bone);">Ink</p>
+        <p class="color-swatch-hex mono" style="color: var(--bone);">#1A1F1C</p>
+      </div>
+      <div class="color-swatch" style="background: var(--sage);">
+        <p class="color-swatch-name" style="color: var(--bone);">Sage</p>
+        <p class="color-swatch-hex mono" style="color: var(--bone);">#7A8B6F</p>
+      </div>
+      <div class="color-swatch" style="background: var(--mist);">
+        <p class="color-swatch-name" style="color: var(--ink);">Mist</p>
+        <p class="color-swatch-hex mono" style="color: var(--ink);">#C9CFC4</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 04 — Clear Space & Sizing -->
+  <section class="section">
+    <p class="section-label mono">04 — clear space & sizing</p>
+    <h2 class="section-title">Breathing room matters</h2>
+    <p class="section-body">Minimum padding on all four sides equals 1x, where 1x is the cap height of the lowercase a. Below minimum sizes, swap to the mark.</p>
+
+    <div class="size-demo">
+      <div class="size-item">
+        <span class="wordmark wordmark-ink" style="font-size: 48px; letter-spacing: -0.04em;">a<span class="three">3</span>b</span>
+        <span class="size-label mono">48px</span>
+      </div>
+      <div class="size-item">
+        <span class="wordmark wordmark-ink" style="font-size: 32px; letter-spacing: -0.04em;">a<span class="three">3</span>b</span>
+        <span class="size-label mono">32px</span>
+      </div>
+      <div class="size-item">
+        <span class="wordmark wordmark-ink" style="font-size: 20px; letter-spacing: -0.03em;">a<span class="three">3</span>b</span>
+        <span class="size-label mono">20px</span>
+      </div>
+      <div class="size-item">
+        <div class="mark mark-sm">
+          <span class="mark-numeral">3</span>
+        </div>
+        <span class="size-label mono">mark 48px</span>
+      </div>
+      <div class="size-item">
+        <div class="mark mark-xs">
+          <span class="mark-numeral">3</span>
+        </div>
+        <span class="size-label mono">mark 32px</span>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 05 — Forbidden Treatments -->
+  <section class="section">
+    <p class="section-label mono">05 — forbidden treatments</p>
+    <h2 class="section-title">Never do this</h2>
+
+    <div class="forbidden-grid">
+      <div class="forbidden-card">
+        <div class="forbidden-demo">
+          <span class="wordmark" style="font-size: 28px; letter-spacing: -0.04em; color: var(--ink); transform: scaleX(1.5);">a<span class="three">3</span>b</span>
+        </div>
+        <p class="forbidden-label mono">don't stretch</p>
+      </div>
+
+      <div class="forbidden-card">
+        <div class="forbidden-demo">
+          <span class="wordmark" style="font-size: 28px; letter-spacing: -0.04em; color: #C23B3B;">a<span style="color: #3B6BC2;">3</span>b</span>
+        </div>
+        <p class="forbidden-label mono">don't recolor</p>
+      </div>
+
+      <div class="forbidden-card">
+        <div class="forbidden-demo">
+          <span style="font-family: 'Geist', sans-serif; font-weight: 800; font-size: 28px; letter-spacing: -0.04em; color: var(--ink);">a<span style="color: var(--sage);">3</span>b</span>
+        </div>
+        <p class="forbidden-label mono">don't change weight</p>
+      </div>
+
+      <div class="forbidden-card">
+        <div class="forbidden-demo">
+          <span class="wordmark" style="font-size: 28px; letter-spacing: -0.04em; color: var(--ink); display: inline-block; transform: rotate(-12deg);">a<span class="three">3</span>b</span>
+        </div>
+        <p class="forbidden-label mono">don't rotate</p>
+      </div>
+
+      <div class="forbidden-card">
+        <div class="forbidden-demo">
+          <span class="wordmark" style="font-size: 28px; letter-spacing: -0.04em; color: var(--ink); text-shadow: 0 4px 12px rgba(26,31,28,0.4);">a<span class="three">3</span>b</span>
+        </div>
+        <p class="forbidden-label mono">don't add shadow</p>
+      </div>
+
+      <div class="forbidden-card">
+        <div class="forbidden-demo">
+          <span class="wordmark" style="font-size: 28px; letter-spacing: -0.04em; background: linear-gradient(135deg, var(--ink), var(--sage)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">a3b</span>
+        </div>
+        <p class="forbidden-label mono">don't use gradients</p>
+      </div>
+
+      <div class="forbidden-card">
+        <div class="forbidden-demo">
+          <span class="wordmark" style="font-size: 28px; letter-spacing: -0.04em; color: var(--ink); border: 2px solid var(--ink); padding: 4px 12px; border-radius: 8px;">a<span class="three">3</span>b</span>
+        </div>
+        <p class="forbidden-label mono">don't add containers</p>
+      </div>
+
+      <div class="forbidden-card">
+        <div class="forbidden-demo">
+          <span class="wordmark" style="font-size: 28px; letter-spacing: -0.04em; color: var(--ink); -webkit-text-stroke: 1px var(--sage); -webkit-text-fill-color: transparent;">a3b</span>
+        </div>
+        <p class="forbidden-label mono">don't outline</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 06 — Typography Spec -->
+  <section class="section">
+    <p class="section-label mono">06 — typography</p>
+    <h2 class="section-title">Geist Medium 500, always</h2>
+    <p class="section-body">The wordmark is set in Geist Medium 500 at −0.05em letter-spacing. The 3 is Sage. The a and b use Ink on light, Bone on dark. No other font, weight, or treatment is permitted.</p>
+
+    <div style="margin-top: 2rem; padding: 2rem; background: var(--bone); border: 1px solid var(--mist); border-radius: 16px;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <p class="mono" style="font-size: 11px; color: var(--sage); letter-spacing: 0.04em; margin-bottom: 0.5rem;">font</p>
+          <p style="font-size: 20px; font-weight: 500;">Geist Medium 500</p>
+        </div>
+        <div>
+          <p class="mono" style="font-size: 11px; color: var(--sage); letter-spacing: 0.04em; margin-bottom: 0.5rem;">tracking</p>
+          <p style="font-size: 20px; font-weight: 500;">−0.05em</p>
+        </div>
+        <div>
+          <p class="mono" style="font-size: 11px; color: var(--sage); letter-spacing: 0.04em; margin-bottom: 0.5rem;">display size</p>
+          <p style="font-size: 20px; font-weight: 500;">96–120px</p>
+        </div>
+        <div>
+          <p class="mono" style="font-size: 11px; color: var(--sage); letter-spacing: 0.04em; margin-bottom: 0.5rem;">line-height</p>
+          <p style="font-size: 20px; font-weight: 500;">1.0</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Footer -->
+  <footer class="footer">
+    <span class="wordmark wordmark-ink" style="font-size: 24px; letter-spacing: -0.04em;">a<span class="three">3</span>b</span>
+    <p class="footer-text" style="margin-top: 1rem;">quiet work, loud results.</p>
+    <p class="mono footer-text" style="margin-top: 0.5rem; font-size: 11px;">logo system v2.0 · maintained by aatish · 2026</p>
+  </footer>
+
+</body>
+</html>

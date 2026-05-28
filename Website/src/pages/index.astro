@@ -1,0 +1,311 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Wordmark from "../components/Wordmark.astro";
+import AutoVideo from "../components/AutoVideo.astro";
+import TestimonialCard from "../components/TestimonialCard.astro";
+---
+<BaseLayout title="a3b — quiet work, loud results">
+  <!-- 01 · HERO ........................................................... -->
+  <section class="s s-hero" id="top">
+    <div class="s-hero__pin">
+      <div class="s-hero__content">
+        <h1 class="s-hero__wm"><Wordmark /></h1>
+        <p class="s-hero__tag">Calm, considered, crafted.</p>
+      </div>
+      <div class="s-hero__scroll" aria-hidden="true">
+        <span class="mono">scroll</span>
+        <span class="s-hero__line"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 · MISSION ........................................................ -->
+  <section class="s s-mission">
+    <div class="s__wrap">
+      <p class="s-mission__line" data-split>
+        Your story isn't generic. Your video shouldn't be either.
+      </p>
+    </div>
+  </section>
+
+  <!-- 03 · REEL (horizontal demo, full-bleed) ............................ -->
+  <section class="s s-reel">
+    <div class="s__wrap">
+      <p class="s-reel__index mono">the reel — demo 01 / 02</p>
+    </div>
+    <div class="s-reel__bleed">
+      <AutoVideo src="/videos/web1.mp4" ratio="wide" controlSide="right" />
+    </div>
+  </section>
+
+  <!-- 03b · VERTICAL DEMO (video left, copy right) ........................ -->
+  <section class="s s-reel s-reel--split">
+    <div class="s__wrap s-reel__split">
+      <div class="s-reel__col s-reel__col--video">
+        <AutoVideo src="/videos/web2.mp4" ratio="vertical" controlSide="left" />
+      </div>
+      <div class="s-reel__col s-reel__col--copy">
+        <p class="s-reel__index mono">the reel — demo 02 / 02</p>
+        <h2 class="s-reel__title">Vertical, but never noisy.</h2>
+        <p class="s-reel__body">
+          Made for the feed, cut for the brand. The same calm, considered
+          frame — held a beat longer than the algorithm expects.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 · TESTIMONIALS ................................................... -->
+  <section class="s s-testimonials">
+    <div class="s__wrap">
+      <header class="s__head">
+        <p class="mono">in their words — 02 / 02</p>
+        <h2 class="s__title">A page kept honest.</h2>
+      </header>
+      <div class="s-testimonials__row">
+        <TestimonialCard
+          quote="Coming after the first three projects."
+          name="placeholder"
+          role="awaiting first testimonial"
+          placeholder={true}
+        />
+        <TestimonialCard
+          quote="Coming after the first three projects."
+          name="placeholder"
+          role="awaiting first testimonial"
+          placeholder={true}
+        />
+        <TestimonialCard
+          quote="Coming after the first three projects."
+          name="placeholder"
+          role="awaiting first testimonial"
+          placeholder={true}
+        />
+      </div>
+      <div class="s-testimonials__dots" data-testimonial-dots></div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import gsap from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  const reduced = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const apple = "cubic-bezier(0.16, 1, 0.3, 1)";
+
+  /* ---- Hero entrance + scroll-out --------------------------------- */
+  const hero = document.querySelector(".s-hero");
+  const heroWm = document.querySelector(".s-hero__wm");
+  const heroTag = document.querySelector(".s-hero__tag");
+  const heroScroll = document.querySelector(".s-hero__scroll");
+
+  if (hero && heroWm && heroTag && heroScroll && !reduced) {
+    gsap.set([heroWm, heroTag, heroScroll], { opacity: 0, y: 24 });
+    gsap.to(heroWm, {
+      opacity: 1,
+      y: 0,
+      duration: 1.2,
+      ease: "expo.out",
+    });
+    gsap.to(heroTag, {
+      opacity: 1,
+      y: 0,
+      duration: 1.0,
+      ease: "expo.out",
+      delay: 0.2,
+    });
+    gsap.to(heroScroll, {
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+      ease: "power2.out",
+      delay: 0.6,
+    });
+
+    /* Pin + the scroll-scrubbed fade are desktop-only. On touch the pin
+       feels janky, and a continuously-scrubbed ScrollTrigger keeps the
+       main thread busy on every scroll frame — so on mobile the hero
+       just scrolls away naturally with no per-frame work. */
+    if (window.innerWidth >= 1024) {
+      ScrollTrigger.create({
+        trigger: ".s-hero",
+        start: "top top",
+        end: "+=50%",
+        pin: ".s-hero__pin",
+        pinSpacing: true,
+      });
+      /* Scroll-out fade for the hero wordmark + tagline only.
+         The scroll indicator is handled separately below so it can
+         come back whenever the user is at the top of the page. */
+      gsap.to(".s-hero__content", {
+        opacity: 0,
+        y: -40,
+        scrollTrigger: {
+          trigger: ".s-hero",
+          start: "top top",
+          end: "+=50%",
+          scrub: 1,
+        },
+      });
+    }
+
+    /* Scroll indicator: always visible at the very top of the page,
+       hidden everywhere else. Works the same on desktop and mobile so
+       returning to the top after scrolling brings it back. */
+    const updateHint = () => {
+      const atTop = window.scrollY < 50;
+      gsap.to(heroScroll, {
+        opacity: atTop ? 1 : 0,
+        duration: 0.4,
+        ease: "power2.out",
+        overwrite: "auto",
+      });
+    };
+    window.addEventListener("scroll", updateHint, { passive: true });
+  }
+
+  /* ---- Mission: per-word fade-up --------------------------------- */
+  const splitTargets = document.querySelectorAll<HTMLElement>("[data-split]");
+  /* The per-word split promotes a span per word to its own layer and
+     animates them all at once — fine on desktop, but it fires right as
+     the hero scrolls away, so on a phone that burst stutters the first
+     scroll. Mobile gets one cheap fade-up of the whole line instead. */
+  const wordSplit = window.matchMedia("(min-width: 1024px)").matches;
+  splitTargets.forEach((el) => {
+    const words = (el.textContent ?? "").trim().split(/\s+/);
+    el.innerHTML = words
+      .map((w) => `<span class="word"><span>${w}</span></span>`)
+      .join(" ");
+    if (reduced) return;
+    if (wordSplit) {
+      const inner = el.querySelectorAll(".word > span");
+      gsap.set(inner, { yPercent: 110, opacity: 0 });
+      gsap.to(inner, {
+        yPercent: 0,
+        opacity: 1,
+        duration: 0.9,
+        ease: "power3.out",
+        stagger: 0.04,
+        scrollTrigger: { trigger: el, start: "top 78%" },
+      });
+    } else {
+      gsap.from(el, {
+        y: 24,
+        opacity: 0,
+        duration: 0.7,
+        ease: "power2.out",
+        scrollTrigger: { trigger: el, start: "top 85%" },
+      });
+    }
+  });
+
+  /* ---- Reel: scale-in ------------------------------------------- */
+  const reelFrame = document.querySelector(".s-reel__col--video");
+  if (reelFrame && !reduced) {
+    gsap.from(reelFrame, {
+      scale: 0.94,
+      opacity: 0,
+      duration: 1,
+      ease: "power3.out",
+      scrollTrigger: { trigger: reelFrame, start: "top 80%" },
+    });
+  }
+
+  /* ---- Generic reveal (testimonials) ----------------------------- */
+  const revealTargets = document.querySelectorAll<HTMLElement>(
+    ".s-testimonials__row > *"
+  );
+  /* Smaller screens get a faster stagger — less waiting on a phone. */
+  const stagger = window.innerWidth < 768 ? 0.04 : 0.08;
+  revealTargets.forEach((el, i) => {
+    if (reduced) return;
+    gsap.from(el, {
+      opacity: 0,
+      y: 28,
+      duration: 0.6,
+      ease: "power2.out",
+      delay: (i % 3) * stagger,
+      scrollTrigger: { trigger: el, start: "top 88%" },
+    });
+  });
+
+  /* ---- Testimonials: pagination dots for the mobile carousel -----
+     The row becomes a horizontal scroll-snap carousel under 900px
+     (CSS). These dots reflect and control scroll position; they're
+     hidden on desktop and only built when the carousel is active. */
+  const tRow = document.querySelector<HTMLElement>(".s-testimonials__row");
+  const tDots = document.querySelector<HTMLElement>("[data-testimonial-dots]");
+  if (tRow && tDots) {
+    const cards = Array.from(tRow.children) as HTMLElement[];
+    const carousel = window.matchMedia("(max-width: 900px)");
+    let dots: HTMLButtonElement[] = [];
+
+    const setActive = (idx: number) =>
+      dots.forEach((d, i) => d.classList.toggle("is-active", i === idx));
+
+    const buildDots = () => {
+      if (dots.length) return;
+      dots = cards.map((card, i) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "s-testimonials__dot";
+        b.setAttribute("aria-label", `Show testimonial ${i + 1} of ${cards.length}`);
+        b.addEventListener("click", () => {
+          const target = card.offsetLeft - cards[0].offsetLeft;
+          tRow.scrollTo({ left: target, behavior: "smooth" });
+        });
+        tDots.appendChild(b);
+        return b;
+      });
+      setActive(0);
+    };
+    const clearDots = () => {
+      tDots.innerHTML = "";
+      dots = [];
+    };
+
+    let raf = 0;
+    tRow.addEventListener(
+      "scroll",
+      () => {
+        if (raf || !dots.length) return;
+        raf = requestAnimationFrame(() => {
+          raf = 0;
+          const stride =
+            cards.length > 1 ? cards[1].offsetLeft - cards[0].offsetLeft : 1;
+          const idx = Math.round(tRow.scrollLeft / stride);
+          setActive(Math.max(0, Math.min(idx, cards.length - 1)));
+        });
+      },
+      { passive: true }
+    );
+
+    if (carousel.matches) buildDots();
+    carousel.addEventListener("change", (e) =>
+      e.matches ? buildDots() : clearDots()
+    );
+  }
+
+  /* ---- Recalculate triggers on resize / device rotation ----------
+     Debounced so we don't thrash on every pixel of an address-bar
+     collapse. Keeps reveals aligned when the
+     layout reflows across the mobile/desktop breakpoint. */
+  let resizeTimer: number;
+  let lastWidth = window.innerWidth;
+  window.addEventListener("resize", () => {
+    /* On mobile the address bar collapsing fires resize with only a
+       height change. Refreshing then recalculates every trigger
+       mid-scroll and stutters — so ignore height-only changes and
+       refresh only when the width (orientation / real reflow) moves. */
+    if (window.innerWidth === lastWidth) return;
+    lastWidth = window.innerWidth;
+    clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(() => ScrollTrigger.refresh(), 200);
+  });
+</script>

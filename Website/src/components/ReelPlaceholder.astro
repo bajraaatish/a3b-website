@@ -1,0 +1,76 @@
+---
+/**
+ * ReelPlaceholder
+ * --------------------------------------------------------------
+ * A polished placeholder that swaps to a real <video> element
+ * once the source file exists at the given path. Until then it
+ * renders an --ink rectangle with a sage play glyph and a small
+ * mono caption telling the owner exactly where to drop the file.
+ *
+ * The HEAD-check / swap happens client-side so static export
+ * (Astro build) still produces a valid HTML page.
+ */
+interface Props {
+  src: string;
+  poster?: string;
+  /** "wide" = 16:9, "vertical" = 9:16, "square" = 1:1 */
+  ratio?: "wide" | "vertical" | "square";
+  /** Caption shown inside the placeholder rectangle */
+  caption?: string;
+  /** Optional sage timecode in the top-right */
+  timecode?: string;
+  /** Extra class hooks for outer container */
+  class?: string;
+}
+const {
+  src,
+  poster,
+  ratio = "wide",
+  caption,
+  timecode,
+  class: cls,
+} = Astro.props;
+const fileLabel = `${src.split("/").pop()} — drop file at ${src}`;
+---
+<div
+  class:list={["reel", `reel--${ratio}`, cls]}
+  data-reel
+  data-src={src}
+  data-poster={poster}
+>
+  <div class="reel__placeholder">
+    <div class="reel__play" aria-hidden="true">
+      <span class="reel__triangle"></span>
+    </div>
+    {timecode && <span class="reel__tc">{timecode}</span>}
+    <p class="reel__label">{caption ?? fileLabel}</p>
+  </div>
+</div>
+
+<script>
+  /* Swap each placeholder to a real <video> if the file is present.
+     One HEAD per src — cheap, and skipped entirely once the page is
+     bfcache-restored. */
+  const swap = async (el: HTMLElement) => {
+    const src = el.dataset.src;
+    const poster = el.dataset.poster;
+    if (!src) return;
+    try {
+      const res = await fetch(src, { method: "HEAD" });
+      if (!res.ok) return;
+    } catch {
+      return;
+    }
+    const placeholder = el.querySelector(".reel__placeholder");
+    if (!placeholder) return;
+    const video = document.createElement("video");
+    video.src = src;
+    if (poster) video.poster = poster;
+    video.controls = true;
+    video.preload = "metadata";
+    video.playsInline = true;
+    video.className = "reel__video";
+    placeholder.replaceWith(video);
+  };
+  document.querySelectorAll<HTMLElement>("[data-reel]").forEach(swap);
+</script>

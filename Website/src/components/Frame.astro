@@ -1,0 +1,53 @@
+---
+/**
+ * The "frame" motif — a letterboxed panel that stands in for footage
+ * without using stock imagery (brand forbids stock photos of people).
+ *
+ *  - variant "card"  → locked 16:9, for a centred wordmark / end-card look
+ *  - variant "panel" → sizes to its content, for a stack of text
+ */
+interface Props {
+  variant?: "card" | "panel";
+  tone?: "ink" | "bone";
+  /** corner timecodes — Geist Mono labels */
+  tcTl?: string;
+  tcTr?: string;
+  tcBl?: string;
+  /** show the animated Sage scrubber along the bottom */
+  scrubber?: boolean;
+  label?: string;
+  class?: string;
+}
+const {
+  variant = "card",
+  tone = "ink",
+  tcTl,
+  tcTr,
+  tcBl,
+  scrubber = false,
+  label,
+  class: className = "",
+} = Astro.props;
+---
+<div
+  class:list={[
+    "frame",
+    tone === "bone" && "frame--bone",
+    variant === "panel" && "frame--panel",
+    className,
+  ]}
+  aria-label={label}
+>
+  {tcTl && <span class="frame__tc frame__tc--tl">{tcTl}</span>}
+  {tcTr && <span class="frame__tc frame__tc--tr">{tcTr}</span>}
+  {tcBl && <span class="frame__tc frame__tc--bl">{tcBl}</span>}
+  <div class="frame__center"><slot /></div>
+  {
+    scrubber && (
+      <div class="scrubber">
+        <div class="scrubber__fill" />
+        <div class="scrubber__head" />
+      </div>
+    )
+  }
+</div>

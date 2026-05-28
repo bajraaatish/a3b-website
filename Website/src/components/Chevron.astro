@@ -1,0 +1,22 @@
+---
+/** The quiet chevron used on every link and button. */
+interface Props {
+  class?: string;
+}
+const { class: className = "" } = Astro.props;
+---
+<svg
+  class:list={["chev", className]}
+  width="7"
+  height="11"
+  viewBox="0 0 7 11"
+  fill="none"
+  aria-hidden="true"
+>
+  <path
+    d="M1 1l5 4.5L1 10"
+    stroke="currentColor"
+    stroke-width="1.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"></path>
+</svg>

@@ -1,0 +1,21 @@
+---
+import Chevron from "./Chevron.astro";
+
+/** Apple-style quiet text link with a chevron that nudges on hover. */
+interface Props {
+  href: string;
+  /** "sage" (default) or "ink" — ink on light surfaces, auto-bone on Ink */
+  tone?: "sage" | "ink";
+  class?: string;
+}
+const { href, tone = "sage", class: className = "" } = Astro.props;
+const external = href.startsWith("http");
+---
+<a
+  href={href}
+  class:list={["tlink", tone === "ink" && "tlink--ink", className]}
+  {...external ? { target: "_blank", rel: "noopener noreferrer" } : {}}
+>
+  <slot />
+  <Chevron />
+</a>

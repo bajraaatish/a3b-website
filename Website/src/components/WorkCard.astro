@@ -1,0 +1,51 @@
+---
+import Wordmark from "./Wordmark.astro";
+
+/** A work tile — 16:9 frame plus a title/category meta row. */
+interface Props {
+  href: string;
+  title: string;
+  category: string;
+  /** mono label, lower-left of the frame */
+  tag: string;
+  /** runtime, lower-right of the frame */
+  runtime: string;
+  tone?: "ink" | "bone";
+  /** optional poster image — falls back to the wordmark frame */
+  poster?: string;
+  delay?: 0 | 1;
+}
+const {
+  href,
+  title,
+  category,
+  tag,
+  runtime,
+  tone = "ink",
+  poster,
+  delay = 0,
+} = Astro.props;
+---
+<a
+  href={href}
+  class:list={["work", "reveal"]}
+  data-delay={delay || undefined}
+>
+  <div class:list={["work__frame", tone === "bone" && "work__frame--bone"]}>
+    {
+      poster ? (
+        <img class="work__poster" src={poster} alt={title} loading="lazy" />
+      ) : (
+        <div class="work__label">
+          <Wordmark />
+        </div>
+      )
+    }
+    <span class="work__tc">{tag}</span>
+    <span class="work__run">{runtime}</span>
+  </div>
+  <div class="work__meta">
+    <h3>{title}</h3>
+    <span class="work__cat">{category}</span>
+  </div>
+</a>

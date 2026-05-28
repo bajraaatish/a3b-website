@@ -1,0 +1,143 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Eyebrow from "../components/Eyebrow.astro";
+import Button from "../components/Button.astro";
+import { site } from "../data/site";
+import { countries } from "../data/countries";
+---
+<BaseLayout
+  title="Book a brief"
+  description="Tell us about the work. We reply within two working days."
+>
+  <section class="posthead">
+    <div class="wrap wrap--narrow">
+      <Eyebrow class="reveal">book a brief</Eyebrow>
+      <h1 class="reveal" data-delay="1">Tell us about the work.</h1>
+      <p class="lead reveal" data-delay="2">
+        A short form — name, the best way to reach you, and the kind of video
+        you have in mind. {site.replyTime.toLowerCase()}.
+      </p>
+    </div>
+  </section>
+
+  <section class="s">
+    <div class="wrap wrap--narrow">
+      <form
+        class="form reveal"
+        data-form
+        data-netlify="true"
+        name="contact"
+        method="POST"
+        action="/contact"
+        netlify-honeypot="bot-field"
+      >
+        {/* Netlify needs the form-name in the POST body */}
+        <input type="hidden" name="form-name" value="contact" />
+        {/* Honeypot — hidden from humans, bots will fill it and get filtered */}
+        <p class="form__hp" aria-hidden="true">
+          <label>
+            Leave this field empty
+            <input name="bot-field" tabindex="-1" autocomplete="off" />
+          </label>
+        </p>
+
+        <div class="field">
+          <label for="cf-name">your name</label>
+          <input
+            id="cf-name"
+            name="name"
+            type="text"
+            required
+            autocomplete="name"
+            placeholder="Your name"
+          />
+        </div>
+
+        <div class="field--row">
+          <div class="field">
+            <label for="cf-email">email</label>
+            <input
+              id="cf-email"
+              name="email"
+              type="email"
+              required
+              autocomplete="email"
+              inputmode="email"
+              placeholder="you@studio.com"
+            />
+          </div>
+          <div class="field">
+            <label for="cf-phone">phone</label>
+            <div class="field__phone">
+              <div class="field__dial-wrap">
+                <span class="field__dial-display" data-dial-display aria-hidden="true">+61</span>
+                <select
+                  id="cf-phone-country"
+                  name="phoneCountry"
+                  aria-label="Country dial code"
+                  class="field__dial"
+                  data-dial-select
+                >
+                  {countries.map((c) => (
+                    <option value={c.iso} data-dial={c.dial} selected={c.iso === "AU"}>
+                      {c.dial} {c.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <input
+                id="cf-phone"
+                name="phone"
+                type="tel"
+                autocomplete="tel"
+                inputmode="tel"
+                placeholder="4xx xxx xxx"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="cf-type">type of video</label>
+          <select id="cf-type" name="type" required>
+            <option value="" disabled selected>Choose one…</option>
+            <option value="short-film">Short film — single brand story (60–180s)</option>
+            <option value="content-set">Content set — hero + cutdowns / variants</option>
+            <option value="retainer">Retainer — ongoing editing partner</option>
+            <option value="not-sure">Not sure yet — let's talk it through</option>
+          </select>
+        </div>
+
+        <div class="form__actions">
+          <Button type="submit" variant="sage" chevron={true}>
+            Send the brief
+          </Button>
+          <p class="form__note" data-form-status hidden></p>
+        </div>
+
+        <p class="form__note">
+          Or email <a href={`mailto:${site.email}`}>{site.email}</a> directly.
+          {site.replyTime}.
+        </p>
+      </form>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  /* Keep the visible dial-code label in sync with the native <select>.
+     The <select>'s own text is hidden (color: transparent) so the closed
+     state shows just "+61" while the open dropdown still shows the full
+     "+61 Country" rows for findability. */
+  document.querySelectorAll<HTMLSelectElement>("[data-dial-select]").forEach((sel) => {
+    const display = sel.parentElement?.querySelector<HTMLElement>("[data-dial-display]");
+    if (!display) return;
+    const sync = () => {
+      const opt = sel.options[sel.selectedIndex];
+      const dial = opt?.dataset.dial || "";
+      if (dial) display.textContent = dial;
+    };
+    sel.addEventListener("change", sync);
+    sync();
+  });
+</script>

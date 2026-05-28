@@ -1,0 +1,15 @@
+---
+/** Mono label with a short Sage tick — the section opener. */
+interface Props {
+  class?: string;
+  /** centre the eyebrow (and its tick) */
+  center?: boolean;
+}
+const { class: className = "", center = false } = Astro.props;
+---
+<span
+  class:list={["eyebrow", "mono", className]}
+  style={center ? "justify-content:center" : undefined}
+>
+  <slot />
+</span>

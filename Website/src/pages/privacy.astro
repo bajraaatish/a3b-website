@@ -1,0 +1,106 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Eyebrow from "../components/Eyebrow.astro";
+import { site } from "../data/site";
+
+const updated = "May 2026";
+---
+
+<BaseLayout
+  title="Privacy"
+  description="How a3b handles the small amount of information this site collects."
+  noindex
+>
+  <section class="posthead">
+    <div class="wrap wrap--narrow">
+      <Eyebrow class="reveal">privacy</Eyebrow>
+      <h1 class="reveal" data-delay="1">Privacy.</h1>
+      <p class="lead reveal" data-delay="2">
+        a3b collects as little as possible, and only what it needs to reply to
+        you. Plain language, no surprises.
+      </p>
+      <div class="post-meta reveal" data-delay="2">
+        <span class="pill">last updated {updated}</span>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule" />
+
+  <section class="section-pad-sm">
+    <div class="wrap wrap--narrow">
+      <div class="prose reveal">
+        <h2>What this page covers</h2>
+        <p>
+          This policy explains what information a3b collects through this
+          website, why, and what happens to it. a3b is a one-person video
+          editing brand based in {site.location}.
+        </p>
+
+        <h2>What is collected</h2>
+        <p>
+          <strong>The contact form.</strong> When you send a brief request, a3b
+          receives the name, email, brand or project name, the option you
+          selected, and the message you wrote. That information is used only to
+          reply to you and to scope the work.
+        </p>
+        <p>
+          <strong>Analytics.</strong> If analytics are enabled, this site uses a
+          privacy-first tool that records aggregate page views without cookies
+          and without tracking you across other sites. No personal profile is
+          built, and there is nothing to opt out of because nothing identifying
+          is stored.
+        </p>
+        <p>
+          <strong>Server logs.</strong> The host this site runs on may keep
+          standard request logs (IP address, browser, time) for security and
+          reliability. a3b does not use these for marketing.
+        </p>
+
+        <h2>What is not collected</h2>
+        <p>
+          a3b does not sell your information, does not run advertising trackers,
+          and does not use third-party marketing cookies. There is no email
+          list you are added to without asking.
+        </p>
+
+        <h2>How long it is kept</h2>
+        <p>
+          Brief requests and project correspondence are kept for as long as
+          they are useful — through a project and for a reasonable period after,
+          for records. You can ask for your enquiry to be deleted at any time.
+        </p>
+
+        <h2>Who it is shared with</h2>
+        <p>
+          Form submissions and email are handled through standard service
+          providers (the website host and an email provider). They process the
+          data only to deliver the message. a3b does not share your information
+          with anyone else.
+        </p>
+
+        <h2>Your choices</h2>
+        <p>
+          You can ask what a3b holds about you, ask for it to be corrected, or
+          ask for it to be deleted. Email <a href={`mailto:${site.email}`}
+            >{site.email}</a
+          > and you will get a reply within two working days.
+        </p>
+
+        <h2>Changes to this policy</h2>
+        <p>
+          If this policy changes, the date at the top of the page changes with
+          it. Material changes will be noted plainly rather than buried.
+        </p>
+
+        <hr />
+        <p>
+          <strong>A note before launch:</strong> this is a plain-language
+          starting point, not legal advice. Have it reviewed against current
+          Australian privacy law before the site goes live, and update the
+          contact details and service providers to match reality.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

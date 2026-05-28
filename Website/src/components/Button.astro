@@ -1,0 +1,52 @@
+---
+import Chevron from "./Chevron.astro";
+
+/**
+ * The pill button. `sage` is the brand call-to-action — used sparingly,
+ * at most one filled Sage button per view (brand system v2.0 §03).
+ */
+interface Props {
+  href?: string;
+  variant?: "sage" | "ink" | "ghost";
+  type?: "button" | "submit";
+  chevron?: boolean;
+  block?: boolean;
+  class?: string;
+  id?: string;
+}
+const {
+  href,
+  variant = "sage",
+  type = "button",
+  chevron = true,
+  block = false,
+  class: className = "",
+  id,
+} = Astro.props;
+
+const classes = [
+  "btn",
+  `btn--${variant}`,
+  block && "btn--block",
+  className,
+];
+const external = href?.startsWith("http");
+---
+{
+  href ? (
+    <a
+      href={href}
+      id={id}
+      class:list={classes}
+      {...external ? { target: "_blank", rel: "noopener noreferrer" } : {}}
+    >
+      <slot />
+      {chevron && <Chevron />}
+    </a>
+  ) : (
+    <button type={type} id={id} class:list={classes}>
+      <slot />
+      {chevron && <Chevron />}
+    </button>
+  )
+}

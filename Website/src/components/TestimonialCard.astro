@@ -1,0 +1,21 @@
+---
+/**
+ * TestimonialCard — quote + attribution. Placeholders read as
+ * honest, not embarrassing, until real testimonials replace them.
+ */
+interface Props {
+  quote: string;
+  name: string;
+  role?: string;
+  placeholder?: boolean;
+}
+const { quote, name, role, placeholder = false } = Astro.props;
+---
+<article class:list={["testimonial", placeholder && "testimonial--placeholder"]}>
+  <p class="testimonial__quote">{quote}</p>
+  <p class="testimonial__attr mono">
+    — 
+    <span>{name}</span>
+    {role && <span class="testimonial__role"> · {role}</span>}
+  </p>
+</article>

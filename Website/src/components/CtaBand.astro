@@ -1,0 +1,48 @@
+---
+import Eyebrow from "./Eyebrow.astro";
+import Button from "./Button.astro";
+import ArrowLink from "./ArrowLink.astro";
+
+/** The closing call-to-action band — one per page, near the footer. */
+interface Props {
+  eyebrow: string;
+  heading: string;
+  body: string;
+  surface?: "ink" | "mist" | "bone";
+  primary: { label: string; href: string };
+  secondary?: { label: string; href: string };
+}
+const {
+  eyebrow,
+  heading,
+  body,
+  surface = "ink",
+  primary,
+  secondary,
+} = Astro.props;
+const surfaceClass =
+  surface === "ink" ? "surface-ink" : surface === "mist" ? "surface-mist" : "";
+---
+<section class:list={["section-pad", "cta-band", surfaceClass]}>
+  <div class="wrap wrap--narrow">
+    <Eyebrow center class="reveal">{eyebrow}</Eyebrow>
+    <h2
+      class="display reveal"
+      data-delay="1"
+      style={surface === "ink" ? "color: var(--bone)" : undefined}
+    >
+      {heading}
+    </h2>
+    <p class="lead reveal" data-delay="2">{body}</p>
+    <div class="btn-row reveal" data-delay="3">
+      <Button href={primary.href} variant="sage">{primary.label}</Button>
+      {
+        secondary && (
+          <ArrowLink href={secondary.href} tone="ink">
+            {secondary.label}
+          </ArrowLink>
+        )
+      }
+    </div>
+  </div>
+</section>

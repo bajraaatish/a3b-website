@@ -1,0 +1,38 @@
+---
+/**
+ * ProjectCard — a single tile in the "Selected work" grid.
+ *
+ * Until videoSrc exists at the expected path, ReelPlaceholder
+ * renders the considered fallback. Once it lands, the same
+ * component swaps to a real <video>. Same hover affordance
+ * on both states.
+ */
+import ReelPlaceholder from "./ReelPlaceholder.astro";
+
+interface Props {
+  title: string;
+  client: string;
+  year: string;
+  videoSrc: string;
+  posterSrc?: string;
+  href?: string;
+}
+const { title, client, year, videoSrc, posterSrc, href } = Astro.props;
+const Tag = href ? "a" : "div";
+---
+<Tag class="project" href={href ?? undefined}>
+  <div class="project__media">
+    <ReelPlaceholder
+      src={videoSrc}
+      poster={posterSrc}
+      ratio="wide"
+      caption={`${videoSrc.split("/").pop()}`}
+    />
+    <span class="project__play" aria-hidden="true">▶</span>
+  </div>
+  <div class="project__meta">
+    <h3 class="project__title">{title}</h3>
+    <p class="project__client">{client}</p>
+    <p class="project__year mono">{year}</p>
+  </div>
+</Tag>

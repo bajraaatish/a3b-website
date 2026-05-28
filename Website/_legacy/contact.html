@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Contact — a3b</title>
+<meta name="description" content="Book a 20-minute brief with a3b. No deck, no pressure — an honest read on whether calm, considered video editing fits your project." />
+<meta name="theme-color" content="#F4F1EB" />
+<link rel="icon" type="image/png" href="assets/logos/a3b-mark.png" />
+<link rel="apple-touch-icon" href="assets/logos/a3b-mark.png" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<nav class="nav" aria-label="Primary">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__logo wm" aria-label="a3b — home">a<span class="three">3</span>b</a>
+    <ul class="nav__links">
+      <li><a href="work.html">Work</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html" class="is-active">Contact</a></li>
+    </ul>
+    <div class="nav__right">
+      <a href="contact.html" class="nav__cta">Book a brief</a>
+      <button class="nav__burger" aria-label="Menu" aria-expanded="false" aria-controls="drawer">
+        <span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <div class="nav__drawer" id="drawer">
+    <a href="work.html">Work</a>
+    <a href="services.html">Services</a>
+    <a href="about.html">About</a>
+    <a href="contact.html" class="is-active">Contact</a>
+    <a href="contact.html" class="btn btn--sage">Book a 20-minute brief</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============ PAGE HEADER ============ -->
+<section class="pagehead">
+  <div class="wrap">
+    <span class="eyebrow mono reveal">contact</span>
+    <h1 class="display reveal" data-delay="1">Book a 20-minute brief.</h1>
+    <p class="lead reveal" data-delay="2">Tell a3b a little about the project. The reply comes within two working days — with an honest read on fit, and a fixed quote if it makes sense to go ahead.</p>
+  </div>
+</section>
+
+<!-- ============ FORM + DETAILS ============ -->
+<section class="section-pad-sm" style="padding-top: 0;">
+  <div class="wrap">
+    <div class="feature" style="align-items: start; gap: clamp(40px,6vw,96px);">
+
+      <!-- form -->
+      <div class="reveal">
+        <form class="form" data-form novalidate>
+          <div class="field">
+            <label for="name">your name</label>
+            <input type="text" id="name" name="name" autocomplete="name" required />
+          </div>
+          <div class="field--row">
+            <div class="field">
+              <label for="email">email</label>
+              <input type="email" id="email" name="email" autocomplete="email" required />
+            </div>
+            <div class="field">
+              <label for="brand">brand or project</label>
+              <input type="text" id="brand" name="brand" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="service">what you have in mind</label>
+            <select id="service" name="service">
+              <option value="short-film">The short film — single brand story</option>
+              <option value="content-set">The content set — multi-piece campaign</option>
+              <option value="retainer">The retainer — ongoing editing partner</option>
+              <option value="unsure">Not sure yet — happy to be advised</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="message">a little about the project</label>
+            <textarea id="message" name="message" placeholder="What is the footage, who is it for, and what is the one thing it needs to say?"></textarea>
+          </div>
+          <div>
+            <button type="submit" class="btn btn--sage">Send the brief request
+              <svg class="chev" width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1 1l5 4.5L1 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <p class="form__note" style="margin-top: 14px;">No pressure, no obligation. a3b reads every message personally.</p>
+            <p class="form__note" data-form-status hidden style="margin-top: 12px; color: var(--sage);"></p>
+          </div>
+        </form>
+      </div>
+
+      <!-- details -->
+      <div class="reveal" data-delay="1">
+        <div class="cdetails">
+          <div>
+            <p class="cdetail__k">email</p>
+            <p class="cdetail__v"><a href="mailto:hello@a3b.video">hello@a3b.video</a></p>
+          </div>
+          <hr class="rule" />
+          <div>
+            <p class="cdetail__k">instagram</p>
+            <p class="cdetail__v"><a href="https://instagram.com/a3b.studio">@a3b.studio</a></p>
+          </div>
+          <hr class="rule" />
+          <div>
+            <p class="cdetail__k">based in</p>
+            <p class="cdetail__v">Australia · working with clients anywhere</p>
+          </div>
+          <hr class="rule" />
+          <div>
+            <p class="cdetail__k">reply time</p>
+            <p class="cdetail__v">Within two working days</p>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top: 36px;">
+          <span class="card__num">good to know</span>
+          <h3>What happens next</h3>
+          <p>You will get a short reply confirming fit, then a calendar link for the 20-minute brief. The brief itself is a conversation, not a sales call — bring the footage details and the one thing the piece needs to say.</p>
+        </div>
+
+        <p class="fineprint" style="margin-top: 24px;">Contact details are placeholders for launch — replace <span class="mono" style="text-transform:none;">hello@a3b.video</span> and <span class="mono" style="text-transform:none;">@a3b.studio</span> with the real handles before going live.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="rule" />
+
+<!-- ============ A FEW THINGS ============ -->
+<section class="section-pad">
+  <div class="wrap">
+    <div class="shead reveal">
+      <span class="eyebrow mono">before you write</span>
+      <h2 class="h-section">A few honest things.</h2>
+    </div>
+    <div class="grid grid-3">
+      <article class="card reveal">
+        <span class="card__num">01</span>
+        <h3>Fit comes first</h3>
+        <p>If the project needs the loud, fast aesthetic, a3b will say so plainly and point you elsewhere. A good fit beats a booked job.</p>
+      </article>
+      <article class="card reveal" data-delay="1">
+        <span class="card__num">02</span>
+        <h3>Quotes are fixed</h3>
+        <p>After the brief, the quote is fixed and scoped to real footage and deliverables. No hourly billing, no scope creep.</p>
+      </article>
+      <article class="card reveal" data-delay="2">
+        <span class="card__num">03</span>
+        <h3>Calm, both ways</h3>
+        <p>The way a3b communicates matches the way it edits — unhurried, clear, no pressure. The whole engagement reads the same.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA BAND ============ -->
+<section class="section-pad surface-ink cta-band">
+  <div class="wrap wrap--narrow">
+    <span class="eyebrow mono reveal" style="justify-content:center;">or just say hello</span>
+    <h2 class="display reveal" data-delay="1" style="color: var(--bone);">Not ready to brief? Email anyway.</h2>
+    <p class="lead reveal" data-delay="2">Questions, a half-formed idea, or just curious whether a3b is the right neighbourhood — all welcome. Every message gets a real reply.</p>
+    <div class="btn-row reveal" data-delay="3">
+      <a href="mailto:hello@a3b.video" class="btn btn--sage">Email hello@a3b.video
+        <svg class="chev" width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1 1l5 4.5L1 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="work.html" class="tlink tlink--ink">See the work first
+        <svg class="chev" width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1 1l5 4.5L1 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <span class="wm" style="font-size:2rem;">a<span class="three">3</span>b</span>
+        <p>Minimal video, considered craft. Quiet work, loud results.</p>
+      </div>
+      <div class="footer__col">
+        <h4>site</h4>
+        <ul>
+          <li><a href="work.html">Work</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h4>services</h4>
+        <ul>
+          <li><a href="services.html">The short film</a></li>
+          <li><a href="services.html">The content set</a></li>
+          <li><a href="services.html">The retainer</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h4>contact</h4>
+        <ul>
+          <li><a href="mailto:hello@a3b.video">hello@a3b.video</a></li>
+          <li><a href="https://instagram.com/a3b.studio">@a3b.studio</a></li>
+          <li><a href="contact.html">Book a brief</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p>© <span data-year>2026</span> a3b · minimal video, considered craft</p>
+      <p>made for focused viewing</p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

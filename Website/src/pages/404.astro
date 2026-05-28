@@ -1,0 +1,28 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Button from "../components/Button.astro";
+import Wordmark from "../components/Wordmark.astro";
+---
+
+<BaseLayout
+  title="Page not found"
+  description="That page could not be found."
+  noindex
+>
+  <section class="notfound wrap">
+    <p class="notfound__code mono">error 404 · not found</p>
+    <p style="font-size: clamp(3rem,2rem+4vw,5rem); line-height:1;">
+      <Wordmark />
+    </p>
+    <h1 class="h-section" style="margin-top: 28px; max-width: 18ch;">
+      This frame does not exist.
+    </h1>
+    <p class="lead" style="margin: 20px auto 0;">
+      The page you were after has moved or never existed. No harm done — here
+      is the way back.
+    </p>
+    <div class="btn-row" style="margin-top: 36px; justify-content:center;">
+      <Button href="/" variant="sage">Back to home</Button>
+    </div>
+  </section>
+</BaseLayout>

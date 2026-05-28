@@ -1,0 +1,59 @@
+---
+import Wordmark from "./Wordmark.astro";
+import Button from "./Button.astro";
+import { navLinks } from "../data/site";
+
+/** Fixed, minimal navigation. Active state derived from the current path. */
+const path = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === "/" ? path === "/" : path.startsWith(href);
+---
+<nav class="nav" aria-label="Primary">
+  <div class="nav__inner">
+    <a href="/" class="nav__logo" aria-label="a3b — home">
+      <Wordmark />
+    </a>
+    <ul class="nav__links">
+      {
+        navLinks.map((link) => (
+          <li>
+            <a
+              href={link.href}
+              class:list={[isActive(link.href) && "is-active"]}
+              aria-current={isActive(link.href) ? "page" : undefined}
+            >
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <div class="nav__right">
+      <a href="/contact" class="nav__cta">Book a brief</a>
+      <button
+        class="nav__burger"
+        aria-label="Menu"
+        aria-expanded="false"
+        aria-controls="nav-drawer"
+      >
+        <span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <div class="nav__drawer" id="nav-drawer">
+    {
+      navLinks.map((link) => (
+        <a
+          href={link.href}
+          class:list={[isActive(link.href) && "is-active"]}
+          aria-current={isActive(link.href) ? "page" : undefined}
+        >
+          {link.label}
+        </a>
+      ))
+    }
+    <Button href="/contact" variant="sage" chevron={false}>
+      Book a 20-minute brief
+    </Button>
+  </div>
+</nav>

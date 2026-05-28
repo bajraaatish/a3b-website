@@ -1,0 +1,11 @@
+---
+/**
+ * The a3b wordmark. Always lowercase, the `3` always Sage.
+ * Never recolour, stretch, or change weight — see brand system v2.0 §05.
+ */
+interface Props {
+  class?: string;
+}
+const { class: className = "" } = Astro.props;
+---
+<span class:list={["wm", className]}>a<span class="three">3</span>b</span>

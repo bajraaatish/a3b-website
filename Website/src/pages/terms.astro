@@ -1,0 +1,120 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Eyebrow from "../components/Eyebrow.astro";
+import { site } from "../data/site";
+
+const updated = "May 2026";
+---
+
+<BaseLayout
+  title="Terms"
+  description="The plain terms of using this site and working with a3b."
+  noindex
+>
+  <section class="posthead">
+    <div class="wrap wrap--narrow">
+      <Eyebrow class="reveal">terms</Eyebrow>
+      <h1 class="reveal" data-delay="1">Terms.</h1>
+      <p class="lead reveal" data-delay="2">
+        How this site may be used, and the plain shape of a working
+        engagement. Specific projects are always confirmed in a written quote.
+      </p>
+      <div class="post-meta reveal" data-delay="2">
+        <span class="pill">last updated {updated}</span>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule" />
+
+  <section class="section-pad-sm">
+    <div class="wrap wrap--narrow">
+      <div class="prose reveal">
+        <h2>Using this site</h2>
+        <p>
+          This website is published by a3b, a one-person video editing brand
+          based in {site.location}. Its content — words, layout, the brand
+          system — is owned by a3b. You are welcome to read, link to, and
+          share it. Please do not copy it wholesale or pass the brand off as
+          your own.
+        </p>
+
+        <h2>The work shown</h2>
+        <p>
+          While the public reel is being assembled, the pieces shown under
+          Work are clearly marked archetypes — they describe how a3b
+          approaches a kind of project, not delivered client work. Real,
+          delivered pieces will replace them and will be labelled as such.
+        </p>
+
+        <h2>Enquiries and quotes</h2>
+        <p>
+          A brief request or email is an enquiry, not a contract. Nothing is
+          booked until a written quote is sent and agreed. Prices listed on the
+          site are starting points in Australian dollars; the figure that
+          applies to your project is the one in your quote.
+        </p>
+
+        <h2>How an engagement works</h2>
+        <p>
+          Every engagement is confirmed in writing before work begins. The
+          written quote sets out the deliverables, the price, the number of
+          revision rounds, the schedule, and what is needed from you. The plain
+          shape is consistent:
+        </p>
+        <ul>
+          <li>Work is priced per project, not per hour.</li>
+          <li>
+            Two rounds of revisions are included unless a quote says otherwise.
+          </li>
+          <li>
+            You provide the footage and the inputs; a3b provides the edit,
+            grade, sound, and finishing.
+          </li>
+          <li>
+            Final files are delivered once the agreed fee is settled in full.
+          </li>
+        </ul>
+
+        <h2>Ownership of finished work</h2>
+        <p>
+          On full payment, you own the finished films for the use described in
+          your quote. a3b keeps the right to show the finished work as part of
+          its own portfolio unless your quote agrees otherwise — useful, for
+          example, where a project is confidential.
+        </p>
+
+        <h2>Fit</h2>
+        <p>
+          a3b only takes on work that fits the calm, considered aesthetic. If a
+          project would be better served by a different approach, you will be
+          told that directly rather than sold something that will not land.
+        </p>
+
+        <h2>Liability</h2>
+        <p>
+          a3b takes care with every engagement. To the extent the law allows,
+          a3b is not liable for indirect or consequential loss, and any
+          liability is limited to the fee paid for the work in question.
+          Nothing in these terms removes rights you have under Australian
+          Consumer Law.
+        </p>
+
+        <h2>Changes</h2>
+        <p>
+          These terms may be updated; the date at the top changes when they
+          are. The terms that apply to your project are the ones in force when
+          your quote is agreed.
+        </p>
+
+        <hr />
+        <p>
+          <strong>A note before launch:</strong> this is a plain-language
+          starting point, not legal advice. Have it reviewed by someone
+          qualified in Australian law before the site goes live, and align it
+          with the actual contract or quote template a3b uses.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
