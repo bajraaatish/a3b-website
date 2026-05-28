@@ -2195,6 +2195,16 @@ section {
     opacity 0.25s var(--ease);
   z-index: 2;
 }
+/* Drop the backdrop-blur on touch devices. Sampling and gaussian-blurring
+   a 18px region of a playing video every scroll frame is a major mobile
+   GPU cost — the nav has the same guard at @media (hover: none). */
+@media (hover: none) {
+  .autovid__btn {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: rgba(20, 20, 20, 0.72);
+  }
+}
 .autovid--ctrl-right .autovid__btn { right: clamp(16px, 2vw, 28px); }
 .autovid--ctrl-left  .autovid__btn { left:  clamp(16px, 2vw, 28px); }
 .autovid__btn:hover {

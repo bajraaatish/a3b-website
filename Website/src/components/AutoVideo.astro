@@ -55,6 +55,11 @@ const {
     const btn = root.querySelector<HTMLButtonElement>("[data-autovid-btn]");
     if (!video || !btn) return;
 
+    /* Track whether the user explicitly paused. If they did, the
+       IntersectionObserver shouldn't auto-resume when the video
+       scrolls back into view. */
+    let userPaused = false;
+
     const sync = () => {
       const paused = video.paused;
       root.classList.toggle("is-paused", paused);
@@ -63,11 +68,36 @@ const {
     };
 
     btn.addEventListener("click", () => {
-      if (video.paused) video.play();
-      else video.pause();
+      if (video.paused) {
+        userPaused = false;
+        video.play();
+      } else {
+        userPaused = true;
+        video.pause();
+      }
     });
     video.addEventListener("play", sync);
     video.addEventListener("pause", sync);
     sync();
+
+    /* Pause when off-screen so the decoder isn't running while the
+       user is reading another section — frees CPU/GPU on mobile,
+       which was a big contributor to scroll jank when both demo
+       videos were decoding simultaneously. */
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              if (!userPaused) video.play().catch(() => {});
+            } else {
+              if (!video.paused) video.pause();
+            }
+          }
+        },
+        { threshold: 0.2 }
+      );
+      io.observe(root);
+    }
   });
 </script>
