@@ -1,8 +1,9 @@
 # Netlify deploy config for the a3b website (Astro static build).
-# Connect this repo in Netlify and it builds and deploys on every push.
-# The contact form is detected automatically from its `data-netlify` attribute.
+# The site lives in /Website. Netlify cd's into `base` before running
+# the build, so `command` and `publish` are relative to /Website.
 
 [build]
+  base = "Website"
   command = "npm run build"
   publish = "dist"
 
