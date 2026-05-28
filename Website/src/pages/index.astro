@@ -157,9 +157,16 @@ import TestimonialCard from "../components/TestimonialCard.astro";
 
     /* Scroll indicator: always visible at the very top of the page,
        hidden everywhere else. Works the same on desktop and mobile so
-       returning to the top after scrolling brings it back. */
+       returning to the top after scrolling brings it back. Edge-triggered
+       and rAF-coalesced — firing gsap.to on every scroll event was
+       spawning a fresh tween per frame and stuttering mobile scrolling. */
+    let lastAtTop: boolean | null = null;
+    let hintRaf = 0;
     const updateHint = () => {
+      hintRaf = 0;
       const atTop = window.scrollY < 50;
+      if (atTop === lastAtTop) return;
+      lastAtTop = atTop;
       gsap.to(heroScroll, {
         opacity: atTop ? 1 : 0,
         duration: 0.4,
@@ -167,7 +174,14 @@ import TestimonialCard from "../components/TestimonialCard.astro";
         overwrite: "auto",
       });
     };
-    window.addEventListener("scroll", updateHint, { passive: true });
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (hintRaf) return;
+        hintRaf = requestAnimationFrame(updateHint);
+      },
+      { passive: true }
+    );
   }
 
   /* ---- Mission: per-word fade-up --------------------------------- */
@@ -236,7 +250,7 @@ import TestimonialCard from "../components/TestimonialCard.astro";
   });
 
   /* ---- Testimonials: pagination dots for the mobile carousel -----
-     The row becomes a horizontal scroll-snap carousel under 900px
+     The row becomes a horizontal free-scrolling carousel under 900px
      (CSS). These dots reflect and control scroll position; they're
      hidden on desktop and only built when the carousel is active. */
   const tRow = document.querySelector<HTMLElement>(".s-testimonials__row");

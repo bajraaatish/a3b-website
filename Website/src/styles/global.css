@@ -1969,8 +1969,13 @@ section {
   position: absolute;
   /* clear the iOS home indicator / gesture bar */
   bottom: max(clamp(28px, 4vw, 56px), env(safe-area-inset-bottom));
-  left: 50%;
-  transform: translateX(-50%);
+  /* Centre via margin auto rather than translateX(-50%), because the
+     GSAP entrance tween animates `y` (which writes `transform`) and
+     would otherwise wipe out the X centering. */
+  left: 0;
+  right: 0;
+  margin-inline: auto;
+  width: max-content;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2117,13 +2122,35 @@ section {
     margin-top: 12px;
   }
   .s-reel--split .s-reel__body { font-size: 16px; line-height: 1.5; }
-  /* Full-bleed horizontal section: on a phone the 16:9 frame is
-     already constrained by viewport width, so surrounding whitespace
-     reads as the video being "small". Pull the section in tight and
-     drop the bleed margins so the video becomes the dominant element. */
-  .s-reel:not(.s-reel--split) { min-height: 0; padding-block: 24px 32px; }
-  .s-reel:not(.s-reel--split) .s-reel__index { margin-bottom: 12px; }
-  .s-reel:not(.s-reel--split) .s-reel__bleed { margin-block: 0; }
+  /* Apple-style full-bleed horizontal video on mobile.
+     The section is a definite-height flex column: a small caption strip
+     up top, then the video grows to fill the rest of the viewport.
+     Section height must be definite (not just min-height) so the bleed's
+     flex-grown height is concrete and the inner autovid's `height: 100%`
+     can resolve. Aspect ratio is dropped so `object-fit: cover` on the
+     inner <video> fills the box edge-to-edge with no letterbox bars. */
+  .s-reel:not(.s-reel--split) {
+    min-height: 100svh;
+    height: 100svh;
+    padding-block: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .s-reel:not(.s-reel--split) .s__wrap {
+    flex: 0 0 auto;
+    padding-block: 24px 12px;
+  }
+  .s-reel:not(.s-reel--split) .s-reel__index { margin-bottom: 0; }
+  .s-reel:not(.s-reel--split) .s-reel__bleed {
+    flex: 1 1 auto;
+    margin-block: 0;
+    min-height: 0;
+  }
+  .s-reel:not(.s-reel--split) .s-reel__bleed .autovid--wide {
+    aspect-ratio: auto;
+    width: 100%;
+    height: 100%;
+  }
 }
 
 /* ---------- AutoVideo component (looping, custom play/pause) ---------- */
@@ -2487,25 +2514,22 @@ section {
 }
 
 @media (max-width: 900px) {
-  /* One card at a time, native horizontal momentum + snap. Cards bleed
+  /* One card at a time, free horizontal momentum scroll. Cards bleed
      to the screen edge so the next one peeks, hinting it's swipeable. */
   .s-testimonials__row {
     display: flex;
     gap: 16px;
     overflow-x: auto;
-    scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     margin-inline: calc(var(--gut) * -1);
     padding-inline: var(--gut);
-    scroll-padding-inline: var(--gut);
   }
   .s-testimonials__row::-webkit-scrollbar {
     display: none;
   }
   .s-testimonials__row > * {
     flex: 0 0 82%;
-    scroll-snap-align: start;
   }
   .s-testimonials__dots {
     display: flex;
