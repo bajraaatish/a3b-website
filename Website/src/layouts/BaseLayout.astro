@@ -16,7 +16,10 @@ interface Props {
 const { title, description, ogImage, type, noindex, jsonLd } = Astro.props;
 ---
 <!doctype html>
-<html lang="en">
+{/* Dark is the default theme — set statically so it holds even with JS
+    disabled. The inline script below removes it only for visitors who have
+    explicitly chosen light. */}
+<html lang="en" data-theme="dark">
   <head>
     <Seo
       title={title}
@@ -27,20 +30,16 @@ const { title, description, ogImage, type, noindex, jsonLd } = Astro.props;
       jsonLd={jsonLd}
     />
 
-    {/* Apply the saved (or system) theme before first paint so dark mode
-        never flashes light on load. Runs inline, synchronously, in <head>. */}
+    {/* Dark is default (set on <html> above). Only an explicit "light"
+        choice opts out — applied before first paint so neither theme
+        flashes on load. Runs inline, synchronously, in <head>. */}
     <script is:inline>
       (function () {
         try {
-          var stored = localStorage.getItem("a3b-theme");
-          var dark =
-            stored === "dark" ||
-            (stored === null &&
-              window.matchMedia("(prefers-color-scheme: dark)").matches);
-          if (dark)
-            document.documentElement.setAttribute("data-theme", "dark");
+          var light = localStorage.getItem("a3b-theme") === "light";
+          if (light) document.documentElement.removeAttribute("data-theme");
           var meta = document.querySelector('meta[name="theme-color"]');
-          if (meta) meta.setAttribute("content", dark ? "#0f1210" : "#f4f1eb");
+          if (meta) meta.setAttribute("content", light ? "#f4f1eb" : "#0f1210");
         } catch (e) {}
       })();
     </script>

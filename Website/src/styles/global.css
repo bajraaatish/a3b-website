@@ -2112,6 +2112,24 @@ section {
 .s-reel__bleed .reel--bleed {
   border-radius: 0;
 }
+/* Subtle dark gradient at the bottom of the horizontal reel video —
+   Apple product-hero polish on every viewport. Clipped by .autovid's
+   overflow:hidden, and below the play/pause pill (z:2) so it stays on
+   top. On mobile the caption is overlaid on this gradient; on desktop
+   it's purely the same finishing wash at the video's lower edge. */
+.s-reel:not(.s-reel--split) .s-reel__bleed .autovid--wide::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 45%;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.45) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
 .s-reel__caption {
   margin-top: 24px;
   font-size: 17px;
@@ -2119,7 +2137,13 @@ section {
 }
 
 /* ---------- 03b · Reel split (vertical video + copy) ---------- */
-.s-reel--split { background: var(--bone); }
+/* Breathing room between the full-bleed horizontal reel (demo 01) and this
+   split section — without it the near-viewport-tall 16:9 video on desktop
+   and the 100svh full-bleed video on mobile butt straight into reel 02. */
+.s-reel--split {
+  background: var(--bone);
+  margin-top: clamp(56px, 9vh, 140px);
+}
 .s-reel__split {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -2161,7 +2185,14 @@ section {
   /* Tighter rhythm on phones — the 100vh section + 96px padding +
      tall portrait video was making the user scroll through a lot
      of empty bone. */
-  .s-reel--split { min-height: 0; padding-block: 56px; }
+  /* Larger gap after the edge-to-edge 100svh reel 01 video — the base
+     9vh works out to only ~60px on a phone, which reads as cramped right
+     against an immersive full-bleed video. */
+  .s-reel--split {
+    min-height: 0;
+    padding-block: 56px;
+    margin-top: clamp(104px, 20vh, 176px);
+  }
   .s-reel--split .s-reel__title {
     font-size: clamp(28px, 7vw, 36px);
     margin-top: 12px;
@@ -2190,22 +2221,8 @@ section {
     height: 100%;
     border-radius: 0;
   }
-  /* Subtle dark gradient at the bottom of the video for caption
-     legibility. Sits inside .autovid's stacking context (z:1) so the
-     play/pause pill (z:2) still reads on top. */
-  .s-reel:not(.s-reel--split) .s-reel__bleed .autovid--wide::after {
-    content: "";
-    position: absolute;
-    inset: auto 0 0 0;
-    height: 45%;
-    background: linear-gradient(
-      to top,
-      rgba(0, 0, 0, 0.45) 0%,
-      rgba(0, 0, 0, 0) 100%
-    );
-    pointer-events: none;
-    z-index: 1;
-  }
+  /* The bottom gradient is defined as a base rule above; on mobile it
+     also carries the overlaid caption below. */
   /* Caption overlay — bottom-left, 24px pad, light on the gradient. */
   .s-reel:not(.s-reel--split) .s__wrap {
     position: absolute;
@@ -2798,12 +2815,10 @@ section {
 /* ---------- Mobile: no scroll or motion effects ----------
    Paired with the noMotion JS guard in pages/index.astro — that gate
    stops any GSAP/ScrollTrigger work from running below 768px, and this
-   block kills CSS-driven motion (the scroll-hint keyframe) and resets
-   the elements GSAP would have set to opacity:0 so they show as-is. */
+   block resets the elements GSAP would have set to opacity:0 so they
+   show as-is. The scroll-hint sliver keeps animating here (cheap,
+   GPU-composited) — it's only stilled for prefers-reduced-motion above. */
 @media (max-width: 768px) {
-  .s-hero__line::after {
-    animation: none;
-  }
   .s-hero__wm,
   .s-hero__tag,
   .s-hero__scroll,

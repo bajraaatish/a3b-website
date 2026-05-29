@@ -61,8 +61,10 @@ const schemas = [business, ...jsonLd];
 <meta name="description" content={description} />
 <link rel="canonical" href={canonical} />
 {noindex && <meta name="robots" content="noindex, nofollow" />}
-<meta name="theme-color" content="#F4F1EB" />
-<meta name="color-scheme" content="light" />
+<!-- Dark is the default theme; the inline script in BaseLayout swaps this
+     to the light value for visitors who have opted into light. -->
+<meta name="theme-color" content="#0f1210" />
+<meta name="color-scheme" content="dark light" />
 <meta name="generator" content={Astro.generator} />
 
 <!-- Open Graph -->
