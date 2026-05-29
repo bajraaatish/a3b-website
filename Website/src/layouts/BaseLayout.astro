@@ -267,17 +267,12 @@ const { title, description, ogImage, type, noindex, jsonLd } = Astro.props;
               return;
             }
 
-            const isWired = form.hasAttribute("data-netlify");
-            if (!isWired) {
-              setStatus(
-                "This form is not connected to a backend on this host. " +
-                  "For now, email hello@a3b.video directly — a reply follows " +
-                  "within two working days.",
-                true
-              );
-              return;
-            }
-
+            /* Always attempt the POST. Netlify strips the `data-netlify`
+               attribute from the served HTML once it registers the form, so
+               we must NOT gate submission on its presence — that flag is gone
+               in the exact environment where the backend is live. On hosts
+               with no form backend the fetch fails and the catch below shows
+               an honest "email directly" fallback. */
             try {
               if (btn) {
                 btn.disabled = true;
