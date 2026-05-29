@@ -20,8 +20,8 @@ export const site = {
   /** PLACEHOLDER — swap for the real handles before going live */
   email: "hello@a3b.video",
   instagram: {
-    handle: "@_aatish3b",
-    url: "https://instagram.com/_aatish3b",
+    handle: "@a3b.video",
+    url: "https://instagram.com/a3b.video",
   },
   location: "Australia",
   locationLong: "Australia · working with clients anywhere",
