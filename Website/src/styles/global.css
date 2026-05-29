@@ -59,6 +59,15 @@
   --bone-08: rgba(244, 241, 235, 0.08);
   --sage-line: rgba(122, 139, 111, 0.9);
 
+  /* Fixed neutrals — never flip with the theme. Media frames (video and
+     poster backdrops), the footer slab, and text sitting on Sage all stay
+     constant in both modes so media never gets a pale frame and Sage keeps
+     its light label. */
+  --ink-fixed: #1a1f1c;
+  --bone-fixed: #f4f1eb;
+
+  color-scheme: light;
+
   /* Geometry */
   --radius-sm: 10px;
   --radius: 18px;
@@ -77,6 +86,35 @@
   --nav-h: 60px;
 }
 
+/* ---------- Dark theme ----------
+   A straight inversion of the Bone/Ink poles: the page neutral goes dark,
+   the text neutral goes light, and every Ink/Bone tint flips with them so
+   the hierarchy is preserved. Sage (the brand accent) is lifted a touch for
+   contrast on the dark field. Media frames, the frosted nav, and the footer
+   can't ride the token swap and are re-pinned at the end of the file.
+   Activated by data-theme="dark" on <html>; see BaseLayout. Placed right
+   after :root so it wins the equal-specificity tie when the attribute is set. */
+[data-theme="dark"] {
+  --bone: #0f1210;
+  --ink: #f4f1eb;
+  --mist: #2b302a;
+
+  --ink-72: rgba(244, 241, 235, 0.74);
+  --ink-52: rgba(244, 241, 235, 0.58);
+  --ink-12: rgba(244, 241, 235, 0.16);
+  --ink-06: rgba(244, 241, 235, 0.09);
+
+  --bone-70: rgba(15, 18, 16, 0.70);
+  --bone-48: rgba(15, 18, 16, 0.48);
+  --bone-14: rgba(15, 18, 16, 0.16);
+  --bone-08: rgba(15, 18, 16, 0.08);
+
+  --sage: #93a487;
+  --sage-line: rgba(147, 164, 135, 0.9);
+
+  color-scheme: dark;
+}
+
 /* ---------- Reset ---------- */
 *,
 *::before,
@@ -87,8 +125,15 @@
 }
 html {
   -webkit-text-size-adjust: 100%;
-  scroll-behavior: smooth;
   scroll-padding-top: calc(var(--nav-h) + 24px);
+}
+/* scroll-behavior:smooth fights iOS Safari's native touch momentum at
+   page edges — swiping up from the bottom would visibly slam back down
+   as the smooth-scroll engine retargeted mid-gesture. Restrict it to
+   pointer-fine devices (desktops with a mouse/trackpad) where the only
+   thing that triggers it is anchor clicks. */
+@media (pointer: fine) {
+  html { scroll-behavior: smooth; }
 }
 body {
   font-family: var(--font);
@@ -120,7 +165,7 @@ button {
 }
 ::selection {
   background: var(--sage);
-  color: var(--bone);
+  color: var(--bone-fixed);
 }
 
 /* ---------- Type primitives ---------- */
@@ -274,7 +319,7 @@ section {
 /* The single Sage call-to-action — used sparingly, one per view */
 .btn--sage {
   background: var(--sage);
-  color: var(--bone);
+  color: var(--bone-fixed);
 }
 .btn--sage:hover {
   background: #6c7d62;
@@ -2123,33 +2168,55 @@ section {
   }
   .s-reel--split .s-reel__body { font-size: 16px; line-height: 1.5; }
   /* Apple-style full-bleed horizontal video on mobile.
-     The section is a definite-height flex column: a small caption strip
-     up top, then the video grows to fill the rest of the viewport.
-     Section height must be definite (not just min-height) so the bleed's
-     flex-grown height is concrete and the inner autovid's `height: 100%`
-     can resolve. Aspect ratio is dropped so `object-fit: cover` on the
-     inner <video> fills the box edge-to-edge with no letterbox bars. */
+     Section is 100svh with the video filling it edge-to-edge. The
+     caption is lifted out of the flow and overlaid bottom-left at 24px
+     pad over a subtle bottom-anchored gradient — Apple product-hero
+     treatment. Aspect ratio is dropped so object-fit:cover on the
+     inner <video> fills the box with no letterbox bars. */
   .s-reel:not(.s-reel--split) {
     min-height: 100svh;
     height: 100svh;
     padding-block: 0;
-    display: flex;
-    flex-direction: column;
+    position: relative;
   }
-  .s-reel:not(.s-reel--split) .s__wrap {
-    flex: 0 0 auto;
-    padding-block: 24px 12px;
-  }
-  .s-reel:not(.s-reel--split) .s-reel__index { margin-bottom: 0; }
   .s-reel:not(.s-reel--split) .s-reel__bleed {
-    flex: 1 1 auto;
+    position: absolute;
+    inset: 0;
     margin-block: 0;
-    min-height: 0;
   }
   .s-reel:not(.s-reel--split) .s-reel__bleed .autovid--wide {
     aspect-ratio: auto;
     width: 100%;
     height: 100%;
+    border-radius: 0;
+  }
+  /* Subtle dark gradient at the bottom of the video for caption
+     legibility. Sits inside .autovid's stacking context (z:1) so the
+     play/pause pill (z:2) still reads on top. */
+  .s-reel:not(.s-reel--split) .s-reel__bleed .autovid--wide::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 45%;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.45) 0%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+  /* Caption overlay — bottom-left, 24px pad, light on the gradient. */
+  .s-reel:not(.s-reel--split) .s__wrap {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 0 24px 24px;
+    z-index: 3;
+    pointer-events: none;
+  }
+  .s-reel:not(.s-reel--split) .s-reel__index {
+    margin-bottom: 0;
+    color: rgba(255, 255, 255, 0.88);
   }
 }
 
@@ -2747,5 +2814,122 @@ section {
     opacity: 1 !important;
     transform: none !important;
   }
+}
+
+/* ============================================================
+   Dark theme · fixed surfaces & literal-colour overrides
+   ------------------------------------------------------------
+   These can't ride the token swap above: media frames must stay
+   dark behind video/posters, the nav's frosted background is a
+   literal rgba, and the footer stays the dark anchor. Kept last
+   so source order wins over the later base .nav / @media rules.
+   ============================================================ */
+
+/* Media frames stay dark in both themes — pinned to --ink-fixed so a
+   poster or letterboxed video never sits on a pale panel. */
+[data-theme="dark"] .frame,
+[data-theme="dark"] .work__frame,
+[data-theme="dark"] .embed,
+[data-theme="dark"] .autovid,
+[data-theme="dark"] .reel {
+  background: var(--ink-fixed);
+}
+/* Light frame variants become a subtle raised dark panel. */
+[data-theme="dark"] .frame--bone,
+[data-theme="dark"] .work__frame--bone {
+  background: #20251f;
+}
+[data-theme="dark"] .surface-mist {
+  background: var(--mist);
+}
+
+/* Frosted nav — literal translucent backgrounds, darkened for the theme. */
+[data-theme="dark"] .nav {
+  background: rgba(15, 18, 16, 0.82);
+}
+[data-theme="dark"] .nav.is-scrolled {
+  background: rgba(15, 18, 16, 0.94);
+}
+@media (hover: none) {
+  [data-theme="dark"] .nav,
+  [data-theme="dark"] .nav.is-scrolled {
+    background: rgba(15, 18, 16, 0.97);
+  }
+}
+
+/* Footer keeps its dark slab + light text (a shade lighter than the page,
+   so it reads as the closing anchor rather than inverting to a bright bar). */
+[data-theme="dark"] .footer {
+  background: var(--ink-fixed);
+  color: var(--bone-fixed);
+}
+[data-theme="dark"] .footer__brand p,
+[data-theme="dark"] .footer__col h4,
+[data-theme="dark"] .footer__bottom p {
+  color: rgba(244, 241, 235, 0.5);
+}
+[data-theme="dark"] .footer__col a {
+  color: rgba(244, 241, 235, 0.72);
+}
+[data-theme="dark"] .footer__col a:hover {
+  color: var(--bone-fixed);
+}
+[data-theme="dark"] .footer__bottom {
+  border-top-color: rgba(244, 241, 235, 0.14);
+}
+
+/* Inverted (ink) button: keep its hover off near-black on the now-light face. */
+[data-theme="dark"] .btn--ink:hover {
+  background: #e7e4dc;
+}
+
+/* Error state: lift the terracotta for legibility on the dark field. */
+[data-theme="dark"] [data-form-status].is-error,
+[data-theme="dark"] .field input:user-invalid,
+[data-theme="dark"] .field textarea:user-invalid {
+  color: #d98c82;
+}
+[data-theme="dark"] .field input:user-invalid,
+[data-theme="dark"] .field textarea:user-invalid {
+  border-color: #d98c82;
+}
+
+/* ---------- Theme toggle ----------
+   Lives in .nav__right, so it stays visible on mobile next to the burger
+   (where .nav__cta is hidden). 44px hit target per the mobile-first touch
+   rule; moon shows in light mode, sun in dark. */
+.nav__theme {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 100px;
+  color: var(--ink);
+  border: 1px solid var(--ink-12);
+  flex-shrink: 0;
+  transition: border-color 0.3s var(--ease), background-color 0.3s var(--ease),
+    color 0.3s var(--ease);
+}
+.nav__theme:hover {
+  border-color: var(--ink);
+}
+.nav__theme:focus-visible {
+  outline: 2px solid var(--sage);
+  outline-offset: 3px;
+}
+.nav__theme svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+.nav__theme .icon-sun {
+  display: none;
+}
+[data-theme="dark"] .nav__theme .icon-sun {
+  display: block;
+}
+[data-theme="dark"] .nav__theme .icon-moon {
+  display: none;
 }
 

@@ -27,6 +27,24 @@ const { title, description, ogImage, type, noindex, jsonLd } = Astro.props;
       jsonLd={jsonLd}
     />
 
+    {/* Apply the saved (or system) theme before first paint so dark mode
+        never flashes light on load. Runs inline, synchronously, in <head>. */}
+    <script is:inline>
+      (function () {
+        try {
+          var stored = localStorage.getItem("a3b-theme");
+          var dark =
+            stored === "dark" ||
+            (stored === null &&
+              window.matchMedia("(prefers-color-scheme: dark)").matches);
+          if (dark)
+            document.documentElement.setAttribute("data-theme", "dark");
+          var meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) meta.setAttribute("content", dark ? "#0f1210" : "#f4f1eb");
+        } catch (e) {}
+      })();
+    </script>
+
     {
       /* Privacy-first analytics — only emitted once a domain is configured
          in src/data/site.ts. No cookies, no banner needed. */
@@ -93,6 +111,37 @@ const { title, description, ogImage, type, noindex, jsonLd } = Astro.props;
            On the home page the wordmark IS the hero, so the bar is hidden
            until the user has scrolled most of the first viewport. Interior
            pages reveal the bar immediately. */
+        /* ---- Theme toggle ----
+           The head ran an inline script that set data-theme before paint;
+           here we just wire the button, persist the choice, and keep the
+           label + address-bar colour in sync. */
+        const themeBtn =
+          document.querySelector<HTMLButtonElement>("[data-theme-toggle]");
+        if (themeBtn) {
+          const themeMeta = document.querySelector<HTMLMetaElement>(
+            'meta[name="theme-color"]'
+          );
+          const root = document.documentElement;
+          const reflect = (dark: boolean) => {
+            themeBtn.setAttribute(
+              "aria-label",
+              dark ? "Switch to light theme" : "Switch to dark theme"
+            );
+            if (themeMeta)
+              themeMeta.setAttribute("content", dark ? "#0f1210" : "#f4f1eb");
+          };
+          reflect(root.getAttribute("data-theme") === "dark");
+          themeBtn.addEventListener("click", () => {
+            const dark = root.getAttribute("data-theme") !== "dark";
+            if (dark) root.setAttribute("data-theme", "dark");
+            else root.removeAttribute("data-theme");
+            try {
+              localStorage.setItem("a3b-theme", dark ? "dark" : "light");
+            } catch (e) {}
+            reflect(dark);
+          });
+        }
+
         const nav = document.querySelector(".nav");
         const burger = document.querySelector(".nav__burger");
         const isHome = location.pathname === "/";
