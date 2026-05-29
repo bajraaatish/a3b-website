@@ -2041,7 +2041,10 @@ section {
   content: "";
   position: absolute;
   inset: 0;
-  background: var(--bone);
+  /* The travelling highlight — always the light tone so it reads as a
+     bright dash sliding down the sage line in BOTH themes. Using --bone
+     here would make it match the dark page background and vanish. */
+  background: var(--bone-fixed);
   transform: translateY(-100%);
   animation: heroScrollHint 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
 }
@@ -2185,13 +2188,14 @@ section {
   /* Tighter rhythm on phones — the 100vh section + 96px padding +
      tall portrait video was making the user scroll through a lot
      of empty bone. */
-  /* Larger gap after the edge-to-edge 100svh reel 01 video — the base
-     9vh works out to only ~60px on a phone, which reads as cramped right
-     against an immersive full-bleed video. */
+  /* Gap after the edge-to-edge 100svh reel 01 video. Delivered as
+     padding-top (not margin) so it can never collapse and always renders
+     as bone space; the base 9vh margin is reset here so this is the only
+     gap in play on phones. */
   .s-reel--split {
     min-height: 0;
-    padding-block: 56px;
-    margin-top: clamp(104px, 20vh, 176px);
+    margin-top: 0;
+    padding: clamp(140px, 26vh, 224px) 0 56px;
   }
   .s-reel--split .s-reel__title {
     font-size: clamp(28px, 7vw, 36px);
